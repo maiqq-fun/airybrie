@@ -1,0 +1,472 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<title>艾里布里</title>
+<style>
+:root{--ink:#392719;--cream:#fff3d7;--orange:#f3a43b;--yellow:#ffd66b;--brown:#6c4328;--shadow:0 7px 0 #6a452a55}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;overscroll-behavior:none;font-family:system-ui,-apple-system,"Noto Sans TC",sans-serif;color:var(--ink);background:#000000;touch-action:none}
+button{font:inherit;cursor:pointer;color:inherit}
+#app{position:relative;width:100%;height:100dvh;overflow:hidden;background:#000000;overscroll-behavior:none;touch-action:none}
+.screen{position:absolute;inset:0;display:none;overflow:hidden;overscroll-behavior:none;touch-action:none}.screen.active{display:block}
+#home{background:#f6bd5b url('./images/index.jpg') center center/100% 100% no-repeat}
+.home-menu{position:absolute;left:50%;top:70%;transform:translateX(-50%);width:min(82%,340px);display:flex;flex-direction:column;align-items:center;gap:14px;z-index:3}
+.home-text-btn{width:100%;border:2.5px solid #392719;border-radius:999px;background:linear-gradient(#fff0c5,#ffd66b);color:#392719;padding:14px 18px;font-size:clamp(20px,5.5vw,27px);font-weight:1000;letter-spacing:1px;box-shadow:0 5px 0 #6c4328,0 8px 14px #6c432833;text-shadow:0 1px #fff8e9;transition:transform .12s,filter .12s}
+.home-text-btn:active{transform:translateY(3px) scale(.98);box-shadow:0 2px 0 #6c4328;filter:brightness(1.05)}
+#gameScreen{background:#000000}
+#gameBg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
+#topbar{position:absolute;z-index:5;top:calc(env(safe-area-inset-top) + 10px);left:12px;right:12px;display:flex;align-items:center;justify-content:space-between;gap:6px}
+.pill{background:#fff3d9eF;border:2.5px solid var(--ink);border-radius:999px;padding:6px 12px;font-weight:900;font-size:clamp(13px,3.8vw,17px);white-space:nowrap;box-shadow:2px 3px 0 #6b452833}
+#gameTitle{font-weight:1000;font-size:clamp(22px,6.4vw,36px);letter-spacing:-1px;text-shadow:2px 2px #fff8e9,-2px -2px #fff8e9,2px -2px #fff8e9,-2px 2px #fff8e9;white-space:nowrap}
+#gameTimer{position:absolute;z-index:5;top:calc(env(safe-area-inset-top) + 58px);left:50%;transform:translateX(-50%);background:#fff3d9eF;border:2.5px solid var(--ink);border-radius:999px;padding:4px 12px;font-weight:900;font-size:clamp(13px,3.8vw,16px);font-variant-numeric:tabular-nums;white-space:nowrap;box-shadow:2px 3px 0 #6b452833;pointer-events:none}
+#pauseBtn{position:absolute;z-index:6;right:14px;top:calc(env(safe-area-inset-top) + 62px);border:2px solid var(--ink);border-radius:50%;width:42px;height:42px;background:#fff0d3;font-weight:1000;box-shadow:2px 3px 0 #6b452833}
+#audioControls{position:absolute;z-index:6;right:14px;top:calc(env(safe-area-inset-top) + 110px);display:flex;flex-direction:column;gap:7px}
+.audioBtn{border:2px solid var(--ink);border-radius:999px;background:#fff0d3;padding:6px 10px;font-size:12px;font-weight:900;box-shadow:2px 3px 0 #6b452833;white-space:nowrap}
+#player{position:absolute;z-index:3;width:clamp(115px,32vw,185px);height:auto;bottom:calc(env(safe-area-inset-bottom) + 22px);left:50%;transform:translateX(-50%);will-change:transform;touch-action:none;user-select:none;-webkit-user-select:none;pointer-events:none}
+#items{position:absolute;inset:0;z-index:2;pointer-events:none}.fall{position:absolute;left:0;top:0;height:auto;max-width:none;will-change:transform;user-select:none;-webkit-user-select:none}
+#toast{position:absolute;z-index:4;left:50%;top:23%;transform:translateX(-50%);font-size:clamp(20px,5.8vw,29px);font-weight:1000;text-shadow:2px 2px #fff7e7,-2px -2px #fff7e7,2px -2px #fff7e7,-2px 2px #fff7e7;white-space:nowrap;pointer-events:none}
+#combo{position:absolute;z-index:4;left:50%;top:42%;transform:translate(-50%,-50%) rotate(-4deg);display:flex;align-items:baseline;gap:8px;opacity:.55;font-family:ui-rounded,"SF Pro Rounded","Arial Rounded MT Bold","Avenir Next",system-ui,sans-serif;font-style:italic;font-weight:900;color:#fff3d7;-webkit-text-stroke:5px var(--ink);paint-order:stroke fill;text-shadow:0 4px 0 var(--ink);white-space:nowrap;pointer-events:none;user-select:none;-webkit-user-select:none}#combo .cw{font-size:clamp(22px,6.5vw,32px);letter-spacing:2px;text-transform:uppercase;color:#ffd66b}#combo .cn{font-size:clamp(36px,11vw,54px);line-height:1}#combo[hidden]{display:none}
+#dim{position:absolute;inset:0;z-index:1;background:#000;opacity:0;pointer-events:none}#dim.on{animation:dimIn 3s forwards}@keyframes dimIn{to{opacity:.25}}
+#aura{position:absolute;z-index:2;left:50%;top:0;border-radius:50%;pointer-events:none;background:radial-gradient(circle,rgba(140,190,255,0) 50%,rgba(140,190,255,.6) 66%,rgba(180,150,255,0) 80%);will-change:transform;animation:auraPulse .8s ease-in-out infinite alternate}@keyframes auraPulse{from{opacity:.5}to{opacity:1}}#aura[hidden]{display:none}
+#lives{position:absolute;z-index:5;left:14px;top:calc(env(safe-area-inset-top) + 108px);transform-origin:left center;font-size:22px;letter-spacing:3px;white-space:nowrap;pointer-events:none;user-select:none;-webkit-user-select:none}#lives[hidden]{display:none}
+#overlay{position:absolute;inset:0;z-index:10;display:flex;align-items:center;justify-content:center;padding:24px;background:#4b2d1a66;backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}#overlay[hidden]{display:none!important}
+.modal{width:min(88%,360px);border:3px solid var(--ink);border-radius:28px;background:var(--cream);padding:24px 20px;text-align:center;box-shadow:8px 8px 0 #6b452a88;animation:pop .18s ease-out}
+@keyframes pop{from{transform:scale(.92);opacity:.5}to{transform:scale(1);opacity:1}}
+.modal h1{margin:0 0 10px;font-size:clamp(27px,8vw,39px);font-weight:1000;line-height:1.1}.modal h1.achievement-title{font-size:clamp(25px,7vw,34px);line-height:1.25;margin-bottom:14px}.achievement-lines{display:flex;flex-direction:column;gap:5px;margin:8px 0 16px;font-size:clamp(20px,5.5vw,26px);font-weight:1000;line-height:1.25}.modal p{font-weight:800;line-height:1.65;margin:8px 0 18px}
+.modalBtn{border:2.5px solid var(--ink);border-radius:18px;background:var(--orange);padding:11px 18px;font-size:18px;font-weight:1000;box-shadow:3px 4px 0 var(--ink);margin:5px;min-width:112px;transition:transform .12s,filter .12s}.modalBtn:active{transform:translate(2px,3px);box-shadow:1px 1px 0 var(--ink);filter:brightness(1.05)}.modalBtn.secondary{background:#f7dfaa}.row{display:flex;justify-content:center;flex-wrap:wrap;gap:8px}
+#backHome{position:absolute;z-index:8;left:12px;top:calc(env(safe-area-inset-top) + 62px);border:2px solid var(--ink);border-radius:999px;background:#fff0d3;padding:7px 12px;font-weight:900;box-shadow:2px 3px 0 #6b452833}
+@media (min-width:700px){#home{background-size:contain;background-color:#000000}#gameScreen{max-width:520px;left:50%;transform:translateX(-50%);width:100%;border-left:2px solid #5b3b2555;border-right:2px solid #5b3b2555}}
+</style>
+</head>
+<body>
+<div id="app">
+  <section id="home" class="screen active" aria-label="首頁">
+    <div class="home-menu"><button id="homeStart" class="home-text-btn">開始遊戲</button><button id="homeBest" class="home-text-btn">最高分數</button></div>
+  </section>
+  <section id="gameScreen" class="screen" aria-label="遊戲畫面">
+    <img id="gameBg" src="./images/manbg.png" alt="遊戲背景"><div id="dim"></div>
+    <div id="topbar"><div class="pill">分數 <span id="score">0</span></div><div id="gameTitle">✦ 艾里布里 ✦</div><div class="pill">最高 <span id="best">0</span></div></div>
+    <div id="gameTimer">⏱ 00:00</div>
+    <button id="backHome">⌂ 首頁</button><button id="pauseBtn" aria-label="暫停">Ⅱ</button>
+    <div id="audioControls"><button id="musicBtn" class="audioBtn" aria-label="切換背景音樂">🎵 音樂：開</button><button id="soundBtn" class="audioBtn" aria-label="切換遊戲音效">🔊 音效：開</button></div>
+    <div id="aura" hidden></div><div id="items"></div><div id="toast"></div><div id="combo" hidden></div><div id="lives" hidden></div><img id="player" src="./images/man.png" alt="玩家角色">
+    <div id="overlay" hidden><div class="modal" id="modalContent"></div></div>
+  </section>
+</div>
+<script>
+(()=>{
+'use strict';
+const $=s=>document.querySelector(s);
+const home=$('#home'), gameScreen=$('#gameScreen'), overlay=$('#overlay'), modal=$('#modalContent');
+const comboEl=$('#combo'), dimEl=$('#dim'), auraEl=$('#aura'), livesEl=$('#lives'), bg=$('#gameBg'), player=$('#player'), itemsEl=$('#items'), toastEl=$('#toast');
+const scoreEl=$('#score'), bestEl=$('#best'), pauseBtn=$('#pauseBtn'), musicBtn=$('#musicBtn'), soundBtn=$('#soundBtn');
+const gameTimerEl=$('#gameTimer');
+function formatClock(seconds){const total=Math.max(0,Math.floor(seconds));return `${String(Math.floor(total/60)).padStart(2,'0')}:${String(total%60).padStart(2,'0')}`;}
+function formatGameTime(seconds){const total=Math.max(0,Math.floor(seconds)),minutes=Math.floor(total/60),secs=total%60;return minutes>0?`${minutes} 分 ${secs} 秒`:`${secs} 秒`;}
+
+/* ========== 圖片：載入時自動縮小，大幅降低手機記憶體與解碼負擔 ========== */
+const IMG_DIR='./images/';
+const ITEM_MAX=288;                         // 掉落物最長邊（顯示最大約 135px，288 足夠 2x/3x 螢幕）
+const PLAYER_MAX=480;                       // 角色最長邊
+const itemNames=['a1','a2','a3','a4','a5','b1','b2','b3','b4','b5','x1','x2','x3','x5','x6','x7','shit1','shit2','shit3'].map(n=>n+'.png').concat('x4.png');
+const sizedNames=[...itemNames.map(n=>[n,ITEM_MAX]),['man.png',PLAYER_MAX],['woman.png',PLAYER_MAX]];
+const urlCache=new Map(), keepAlive=[], glowFrac=new Map();
+const hatNames=['a1','a2','a3','a4','a5','b1','b2','b3','b4','b5'].map(n=>n+'.png');
+const img=name=>urlCache.get(name)||IMG_DIR+name;   // 縮圖失敗時自動退回原圖
+
+const toURL=c=>new Promise(res=>c.toBlob(b=>res(b?URL.createObjectURL(b):null),'image/png'));
+function prewarm(u){const pre=new Image();pre.src=u;keepAlive.push(pre);if(pre.decode)pre.decode().catch(()=>{});}
+function shrink(name,max){
+  return new Promise(resolve=>{
+    const im=new Image();
+    im.decoding='async';
+    im.onload=async()=>{
+      try{
+        const k=Math.min(1,max/Math.max(im.naturalWidth,im.naturalHeight));
+        const w=Math.max(1,Math.round(im.naturalWidth*k)), h=Math.max(1,Math.round(im.naturalHeight*k));
+        const c=document.createElement('canvas');c.width=w;c.height=h;
+        const g=c.getContext('2d');g.imageSmoothingEnabled=true;g.imageSmoothingQuality='high';g.drawImage(im,0,0,w,h);
+        const u=await toURL(c);if(u){urlCache.set(name,u);prewarm(u);}
+        c.width=c.height=0;
+        if(hatNames.includes(name)){           // 巨大帽子用的金色光暈版本（同一張圖，事先畫好，遊戲中不耗效能）
+          const P=Math.round(w*.1);
+          const c2=document.createElement('canvas');c2.width=w+2*P;c2.height=h+2*P;
+          const g2=c2.getContext('2d');g2.imageSmoothingEnabled=true;g2.imageSmoothingQuality='high';
+          g2.shadowColor='rgba(255,205,70,1)';g2.shadowBlur=P*.9;
+          g2.drawImage(im,P,P,w,h);g2.drawImage(im,P,P,w,h);
+          const u2=await toURL(c2);
+          if(u2){urlCache.set('glow_'+name,u2);glowFrac.set(name,w/(w+2*P));prewarm(u2);}
+          c2.width=c2.height=0;
+        }
+      }catch(e){}
+      resolve();
+    };
+    im.onerror=()=>resolve();
+    im.src=IMG_DIR+name;
+  });
+}
+let assetsReady=false;
+const queue=sizedNames.slice();
+const worker=async()=>{while(queue.length){const [n,m]=queue.shift();await shrink(n,m);}};
+const readyPromise=Promise.all([worker(),worker(),worker()]).then(()=>{assetsReady=true;});
+// 背景圖只有一張在用，單純預先載入即可
+['manbg.png','womanbg.png'].forEach(n=>{const i=new Image();i.decoding='async';i.src=IMG_DIR+n;});
+
+/* ========== 音效 ========== */
+const soundFiles={click:IMG_DIR+'click.mp3',pop:IMG_DIR+'pop.mp3',jump:IMG_DIR+'jump2.mp3',poo:IMG_DIR+'poo.mp3',music:IMG_DIR+'music2.mp3'};
+const poolSize={click:2,pop:3,jump:2,poo:1};
+const soundPools={}, effectCursor={};
+for(const name in poolSize){
+  effectCursor[name]=0;
+  soundPools[name]=Array.from({length:poolSize[name]},()=>{const a=new Audio(soundFiles[name]);a.preload='auto';a.volume=name==='poo'?1:.8;a.playsInline=true;a.load();return a;});
+}
+const bgMusic=new Audio(soundFiles.music);bgMusic.preload='auto';bgMusic.loop=true;bgMusic.volume=.45;bgMusic.playsInline=true;bgMusic.load();
+let musicEnabled=true, soundEnabled=true;
+// 音效改用 Web Audio：解碼一次、播放不卡主執行緒（失敗時自動退回 Audio 元素）
+let actx=null;const buffers={},gains={};
+try{const AC=window.AudioContext||window.webkitAudioContext;if(AC){actx=new AC();for(const n in poolSize){const g=actx.createGain();g.gain.value=n==='poo'?1:.8;g.connect(actx.destination);gains[n]=g;}}}catch(e){actx=null;}
+(async()=>{if(!actx)return;for(const n in poolSize){try{const r=await fetch(soundFiles[n]);if(!r.ok)continue;const ab=await r.arrayBuffer();buffers[n]=await new Promise((ok,no)=>{const p=actx.decodeAudioData(ab,ok,no);if(p&&p.catch)p.catch(no);});}catch(e){}}})();
+const resumeCtx=()=>{try{if(actx&&actx.state!=='running')actx.resume();}catch(e){}};
+const safePlay=(a,tag)=>{try{const r=a.play();if(r&&r.catch)r.catch(e=>console.warn(tag,e));}catch(e){console.warn(tag,e);}};
+function updateAudioButtons(){
+  musicBtn.textContent=`🎵 音樂：${musicEnabled?'開':'關'}`;
+  soundBtn.textContent=`🔊 音效：${soundEnabled?'開':'關'}`;
+  musicBtn.setAttribute('aria-pressed',String(musicEnabled));
+  soundBtn.setAttribute('aria-pressed',String(soundEnabled));
+}
+function playEffect(name){
+  if(!soundEnabled)return;
+  if(actx&&buffers[name]){try{resumeCtx();const src=actx.createBufferSource();src.buffer=buffers[name];src.connect(gains[name]);src.start(0);return;}catch(e){}}
+  const pool=soundPools[name];if(!pool)return;
+  const s=pool[effectCursor[name]++%pool.length];
+  try{s.pause();s.currentTime=0;}catch(e){}
+  safePlay(s,'音效播放失敗：'+name);
+}
+const playClick=()=>playEffect('click');
+function startMusic(){if(!musicEnabled)return;try{bgMusic.pause();bgMusic.currentTime=0;}catch(e){}safePlay(bgMusic,'背景音樂播放失敗');}
+function stopMusic(){try{bgMusic.pause();bgMusic.currentTime=0;}catch(e){}}
+// iOS 需要使用者第一次點擊時「解鎖」每個音訊，之後才能在遊戲中自由播放
+let audioUnlocked=false;
+function unlockAudio(){
+  resumeCtx();if(audioUnlocked)return;audioUnlocked=true;
+  const all=[bgMusic,...Object.values(soundPools).flat()];
+  for(const a of all){
+    try{a.muted=true;const r=a.play();
+      const done=()=>{try{a.pause();a.currentTime=0;}catch(e){}a.muted=false;};
+      if(r&&r.then)r.then(done).catch(()=>{a.muted=false;});else done();
+    }catch(e){a.muted=false;}
+  }
+}
+
+/* ========== 遊戲狀態 ========== */
+const BEST_KEY='airi-brie-best';
+const readBest=()=>{try{return Number(localStorage.getItem(BEST_KEY)||0);}catch(e){return 0;}};
+const COMBO_KEY='airi-brie-best-combo';
+const readBestCombo=()=>{try{return Number(localStorage.getItem(COMBO_KEY)||0);}catch(e){return 0;}};
+let bestCombo=readBestCombo(), bestComboDirty=false, combo=0, maxCombo=0;
+let bestDirty=false;
+function saveBest(){try{if(bestDirty){bestDirty=false;localStorage.setItem(BEST_KEY,String(best));}if(bestComboDirty){bestComboDirty=false;localStorage.setItem(COMBO_KEY,String(bestCombo));}}catch(e){}}
+let score=0,best=readBest(),running=false,paused=false,gameOverPending=false,last=0,spawnTimer=0,elapsed=0,objects=[],px=.5,raf=0,toastTimer=0,toastPriorityUntil=0;
+let magnetTimer=0,giantTimer=20,shieldTimer=20,lives=0,invulnTimer=0,dimmed=false;
+let comboTimer=0,stormTimer=0,poopRainTimer=0,poopDodged=0,runAchievements=[],unlockedThisRun=new Set(),specialSpawnTimer=10,lastSpecialSrc='';
+const elPools=new Map();
+
+const common=[{src:'a1.png',points:10},{src:'a2.png',points:10},{src:'b1.png',points:10},{src:'b2.png',points:10},{src:'a3.png',points:15},{src:'a4.png',points:15},{src:'b3.png',points:15},{src:'b4.png',points:15},{src:'a5.png',points:20},{src:'b5.png',points:20}];
+const specials=['x1.png','x2.png','x3.png','x4.png','x5.png','x6.png'];   // 盾牌 x7 另外有自己的計時器
+const hazards=[{src:'shit1.png',size:58,speed:1.12},{src:'shit2.png',size:76,speed:.92},{src:'shit3.png',size:92,speed:.78}];
+const pick=arr=>arr[Math.floor(Math.random()*arr.length)];
+const achievementDefs=[
+  {id:'poop10',name:'合格鏟屎官',test:()=>poopDodged>=10},
+  {id:'poop30',name:'零的領域',test:()=>poopDodged>=30},
+  {id:'1000',name:'捕獵型人格',test:()=>score>=1000},
+  {id:'2000',name:'預判大師',test:()=>score>=2000},
+  {id:'2500',name:'閃身步 PRO',test:()=>score>=2500},
+  {id:'3000',name:'神級貓奴',test:()=>score>=3000},
+  {id:'t30',name:'電光捕手',test:()=>elapsed>=30},
+  {id:'t60',name:'反應神話',test:()=>elapsed>=60},
+  {id:'t80',name:'不死傳說',test:()=>elapsed>=80}
+];
+bestEl.textContent=best;
+
+/* ========== 版面尺寸快取（避免每幀強制重排） ========== */
+let W=0,H=0,screenLeft=0,pw=0,ptop=0,pbot=0;
+function updateMetrics(){
+  const sr=gameScreen.getBoundingClientRect();
+  if(!sr.width)return;
+  W=gameScreen.clientWidth;H=gameScreen.clientHeight;screenLeft=sr.left;
+  const pr=player.getBoundingClientRect();
+  pw=pr.width;ptop=pr.top-sr.top;pbot=pr.bottom-sr.top;
+  const as=pw*1.8;auraEl.style.width=auraEl.style.height=as+'px';auraEl.style.top=((ptop+pbot)/2-as/2)+'px';
+}
+
+/* ========== 連擊（不錯過累積；大便不計入） ========== */
+function renderCombo(pop){
+  if(combo<2){comboEl.hidden=true;return;}
+  comboEl.innerHTML='<span class="cw">Combo</span><span class="cn">'+combo+'</span>';comboEl.hidden=false;
+  if(pop&&comboEl.animate)comboEl.animate([{transform:'translate(-50%,-50%) rotate(-4deg) scale(1.3)'},{transform:'translate(-50%,-50%) rotate(-4deg) scale(1)'}],{duration:160,easing:'ease-out'});
+}
+function comboHit(){
+  combo++;
+  if(combo>maxCombo){maxCombo=combo;if(maxCombo>bestCombo){bestCombo=maxCombo;bestComboDirty=true;}}
+  renderCombo(true);
+}
+function comboBreak(){if(!combo)return;combo=0;renderCombo(false);}
+
+/* ========== 盾牌（❤️ 生命） ========== */
+function renderLives(pop){
+  if(lives<=0){livesEl.hidden=true;return;}
+  livesEl.textContent='🧻'.repeat(lives);livesEl.hidden=false;
+  if(pop&&livesEl.animate)livesEl.animate([{transform:'scale(1.5)'},{transform:'scale(1)'}],{duration:220,easing:'ease-out'});
+}
+function setAura(on){
+  if(on){updateMetrics();auraEl.hidden=false;auraEl.style.transform=`translateX(calc(-50% + ${(px-.5)*W}px))`;}
+  else auraEl.hidden=true;
+}
+
+/* ========== 畫面 / 對話框 ========== */
+function showScreen(which){home.classList.toggle('active',which==='home');gameScreen.classList.toggle('active',which==='game');}
+function showModal(html){modal.innerHTML=html;overlay.hidden=false;}
+function hideModal(){overlay.hidden=true;}
+function goHome(){hideModal();showScreen('home');}
+function homeModal(){
+  showScreen('game');
+  showModal(`<h1>最高分數</h1><p>🏆 最高紀錄<br><strong style="font-size:42px">${best}</strong><br><br>🔥 最高連擊<br><strong style="font-size:42px">${bestCombo}</strong></p><button class="modalBtn" id="modalHome">返回首頁</button>`);
+  $('#modalHome').onclick=goHome;
+}
+function chooseModal(){
+  showScreen('game');
+  showModal(`<h1>選擇遊戲角色</h1><p>今天你想玩哪個角色？</p><div class="row"><button class="modalBtn" id="chooseMan">帥哥</button><button class="modalBtn" id="chooseWoman">美女</button></div><button class="modalBtn secondary" id="chooseBack">返回首頁</button>`);
+  $('#chooseMan').onclick=()=>beginCharacter('man');
+  $('#chooseWoman').onclick=()=>beginCharacter('woman');
+  $('#chooseBack').onclick=goHome;
+}
+async function beginCharacter(kind){
+  if(!assetsReady){showModal('<h1>修蛋幾勒…</h1><p>正在準備遊戲素材<br>畫面很卡請重整🤧</p>');await readyPromise;}
+  bg.src=IMG_DIR+(kind==='man'?'manbg.png':'womanbg.png');
+  player.src=img(kind==='man'?'man.png':'woman.png');
+  hideModal();showScreen('game');startGame();
+}
+function setPlayer(x){
+  px=Math.max(.06,Math.min(.94,x));
+  const tf=`translateX(calc(-50% + ${(px-.5)*W}px))`;
+  player.style.transform=tf;if(!auraEl.hidden)auraEl.style.transform=tf;
+}
+
+/* ========== 掉落物元件池 ========== */
+function acquireElement(src){
+  const p=elPools.get(src);let el=p&&p.pop();
+  if(!el){el=document.createElement('img');el.className='fall';el.draggable=false;el.decoding='async';el.src=img(src);el._src=src;itemsEl.appendChild(el);}
+  el.style.visibility='visible';return el;
+}
+function releaseElement(el){
+  if(!el)return;el.style.visibility='hidden';el.style.transform='translate3d(0,-9999px,0)';
+  let p=elPools.get(el._src);if(!p){p=[];elPools.set(el._src,p);}p.push(el);
+}
+function cleanObjects(){objects.forEach(o=>releaseElement(o.el));objects=[];}
+
+/* ========== 遊戲流程 ========== */
+function startGame(){
+  cancelAnimationFrame(raf);cleanObjects();gameOverPending=false;startMusic();
+  score=0;elapsed=0;gameTimerEl.textContent='⏱ 00:00';spawnTimer=0;comboTimer=stormTimer=poopRainTimer=0;
+  specialSpawnTimer=8+Math.random()*5;lastSpecialSrc='';poopDodged=0;runAchievements=[];unlockedThisRun=new Set();
+  combo=maxCombo=0;comboEl.hidden=true;magnetTimer=0;setAura(false);lives=0;invulnTimer=0;renderLives(false);giantTimer=15+Math.random()*10;shieldTimer=18+Math.random()*10;dimmed=false;dimEl.classList.remove('on');scoreEl.textContent='0';running=true;paused=false;pauseBtn.textContent='Ⅱ';pauseBtn.hidden=false;toastEl.textContent='';
+  updateMetrics();setPlayer(.5);
+  last=performance.now();raf=requestAnimationFrame(loop);
+}
+function finishGame(){
+  if(!running&&!gameOverPending)return;
+  gameOverPending=false;running=false;cancelAnimationFrame(raf);stopMusic();saveBest();pauseBtn.hidden=true;comboEl.hidden=true;setAura(false);livesEl.hidden=true;
+  const title=runAchievements.length?runAchievements.map(n=>`<div>🏆${n}</div>`).join(''):'遊戲結束';
+  const titleClass=runAchievements.length?'achievement-title':'';
+  showModal(`<h1 class="${titleClass}">${title}</h1><p>你的分數：<strong>${score}</strong><br>最高分數：<strong>${best}</strong><br>本局最高連擊：<strong>${maxCombo}</strong><br>⏱️ 本局遊玩時間：<strong>${formatGameTime(elapsed)}</strong><br><br>🎮 再玩一次 🎮</p><div class="row"><button class="modalBtn" id="retry">重新開始</button><button class="modalBtn secondary" id="endHome">返回首頁</button></div>`);
+  $('#retry').onclick=()=>{hideModal();startGame();};
+  $('#endHome').onclick=goHome;
+}
+function pauseGame(){
+  if(!running||gameOverPending)return;
+  paused=!paused;pauseBtn.textContent=paused?'▶':'Ⅱ';
+  if(paused){cancelAnimationFrame(raf);try{bgMusic.pause();}catch(e){}}
+  else{last=performance.now();raf=requestAnimationFrame(loop);if(musicEnabled)safePlay(bgMusic,'背景音樂播放失敗');}
+}
+function showToast(text,duration=1100,priority=false,fancy=false){
+  if(!priority&&performance.now()<toastPriorityUntil)return;
+  if(priority)toastPriorityUntil=performance.now()+duration;
+  toastEl.textContent=text;clearTimeout(toastTimer);
+  if(toastEl.animate){
+    if(fancy)toastEl.animate([{transform:'translateX(-50%) scale(.5) rotate(-6deg)',opacity:0},{transform:'translateX(-50%) scale(1.35) rotate(3deg)',opacity:1,offset:.5},{transform:'translateX(-50%) scale(1) rotate(0deg)',opacity:1}],{duration:380,easing:'ease-out'});
+    else toastEl.animate([{transform:'translateX(-50%) scale(1.3)'},{transform:'translateX(-50%) scale(1)'}],{duration:160,easing:'ease-out'});
+  }
+  toastTimer=setTimeout(()=>{if(performance.now()>=toastPriorityUntil)toastEl.textContent='';},duration);
+}
+function unlockCheck(){
+  for(const a of achievementDefs){
+    if(a.test()&&!unlockedThisRun.has(a.id)){unlockedThisRun.add(a.id);runAchievements.push(a.name);showToast('🏅成就解鎖：'+a.name,1400,false,true);}
+  }
+}
+function addScore(n){
+  score+=n;scoreEl.textContent=score;
+  if(score>best){best=score;bestDirty=true;bestEl.textContent=best;}
+  unlockCheck();
+}
+function activateSpecial(src){
+  if(src==='x1.png'){addScore(500);showToast('🪎+500',1800,true,true);}
+  else if(src==='x2.png'){comboTimer=5;showToast('🕹️10倍得分 5秒鐘',1100,false,true);}
+  else if(src==='x3.png'){stormTimer=5;showToast('🐱有貓膩',1800,true,true);}
+  else if(src==='x4.png'){addScore(1000);showToast('🌱+1000',1800,true,true);}
+  else if(src==='x6.png'){magnetTimer=5;setAura(true);showToast('🧲強力磁鐵5秒鐘',1100,false,true);}
+  else if(src==='x7.png'){lives=Math.min(3,lives+1);renderLives(true);showToast('🧻守護天屎降臨',1400,false,true);}
+  else if(src==='x5.png'){
+    poopRainTimer=5;
+    for(const o of objects){
+      const h=pick(hazards);
+      releaseElement(o.el);
+      o.bad=true;o.kind='bad';o.points=0;o.giant=false;o.inset=.16;o.src=h.src;o.size=h.size;
+      o.el=acquireElement(h.src);o.el.style.width=h.size+'px';o.el.style.height='auto';
+      o.el.style.transform=`translate3d(${o.x}px,${o.y}px,0) rotate(${o.rot}deg)`;
+    }
+    showToast('☠完蛋 屎在滾',1100,false,true);
+  }
+}
+function weightedItem(){
+  if(poopRainTimer>0)return {...pick(hazards),kind:'bad'};
+  if(stormTimer>0||magnetTimer>0)return {...pick(common),kind:'normal'};   // 貓咪大雨、磁鐵期間：只掉帽子、量大
+  // 盾牌：獨立計時器（沒有盾牌時更常出現），畫面上同時只會有一個
+  if(shieldTimer<=0&&lives<3&&!objects.some(o=>o.src==='x7.png')){
+    shieldTimer=(lives===0?18:28)+Math.random()*10;
+    return {src:'x7.png',kind:'special',points:0};
+  }
+  // 其他特殊道具有自己的計時器，且不會連續出現同一種；有限時效果進行中時不出新道具
+  const busy=comboTimer>0||stormTimer>0||poopRainTimer>0||magnetTimer>0;
+  if(specialSpawnTimer<=0&&!busy){
+    const giantOn=objects.some(o=>o.giant);
+    const pool=specials.filter(s=>s!==lastSpecialSrc&&!(giantOn&&s==='x2.png'));   // 巨大帽子在場時不出逗貓棒
+    if(pool.length){const src=pick(pool);lastSpecialSrc=src;specialSpawnTimer=10+Math.random()*5;return {src,kind:'special',points:0};}
+    specialSpawnTimer=4;
+  }
+  // 巨大帽子：分數 10 倍；逗貓棒生效中或畫面上有逗貓棒時不出現，所以不會有倍數疊加
+  if(giantTimer<=0&&comboTimer<=0&&!objects.some(o=>o.src==='x2.png')){
+    giantTimer=20+Math.random()*10;
+    const c=pick(common);
+    return {...c,kind:'normal',giant:true,points:c.points*10};
+  }
+  const roll=Math.random();
+  if(roll<.78)return {...pick(common),kind:'normal'};
+  const hazardChance=Math.min(.18,.08+elapsed/240);
+  if(roll<.78+hazardChance)return {...pick(hazards),kind:'bad'};
+  return {...pick(common),kind:'normal'};
+}
+function makeItem(){
+  const objectLimit=(stormTimer>0||magnetTimer>0)?15:30;
+  if(objects.length>=objectLimit){const oldest=objects.shift();if(oldest&&oldest.el)releaseElement(oldest.el);}
+  const data=weightedItem();
+  const normalSize=Math.max(58,Math.min(108,innerWidth*.18));
+  let size, inset=.16, key=data.src;
+  if(data.giant){
+    // 比原本大 20%，使用預先畫好金色光暈的同一張圖（光暈佔外圈，碰撞範圍仍以帽子本體計算）
+    const frac=glowFrac.get(data.src);
+    if(frac&&urlCache.has('glow_'+data.src)){key='glow_'+data.src;size=normalSize*1.2/frac;inset=.5-.34*frac;}
+    else size=normalSize*1.2;
+  }else size=data.kind==='bad'?Math.min(data.size||58,Math.max(42,innerWidth*.22))
+    :(data.kind==='special'&&data.src==='x4.png')?normalSize*1.25:normalSize;
+  const el=acquireElement(key);
+  el.style.width=size+'px';el.style.height='auto';
+  el.style.transform='translate3d(0,'+(-size)+'px,0)';
+  const x=Math.random()*Math.max(1,W-size), y=-size;
+  const base=280+Math.min(elapsed,90)*8;
+  const speed=base+(data.kind==='bad'?(Math.random()*90+65)*(data.speed||1):data.kind==='special'?Math.random()*90+30:Math.random()*100-20);
+  objects.push({el,x,y,size,rot:Math.random()*70-35,spin:Math.random()*300-150,speed,points:data.points||0,bad:data.kind==='bad',kind:data.kind,src:data.src,giant:!!data.giant,inset,off:(Math.random()-.5)*pw*.6});
+}
+function loop(t){
+  if(!running)return;
+  if(paused){raf=requestAnimationFrame(loop);return;}
+  if(!W||!pw)updateMetrics();
+  const dt=Math.min((t-last)/1000,.045);last=t;elapsed+=dt;gameTimerEl.textContent='⏱ '+formatClock(elapsed);
+  comboTimer=Math.max(0,comboTimer-dt);stormTimer=Math.max(0,stormTimer-dt);poopRainTimer=Math.max(0,poopRainTimer-dt);
+  magnetTimer=Math.max(0,magnetTimer-dt);if(magnetTimer<=0&&!auraEl.hidden)setAura(false);
+  invulnTimer=Math.max(0,invulnTimer-dt);
+  giantTimer-=dt;shieldTimer-=dt;
+  if(!(comboTimer>0||stormTimer>0||poopRainTimer>0||magnetTimer>0))specialSpawnTimer-=dt;
+  if(!dimmed&&elapsed>=40){dimmed=true;dimEl.classList.add('on');showToast('⚡️神經反射超越人類⚡️',2400,true,true);}
+  spawnTimer+=dt;
+  const rain=stormTimer>0||magnetTimer>0;
+  const interval=rain?.22:Math.max(.36,.86-elapsed*.005);
+  if(spawnTimer>=interval){spawnTimer=0;if(rain){if(objects.length<15)makeItem();}else makeItem();}
+  // 玩家碰撞框：全部用快取數值計算，不讀取 DOM
+  const ph=pbot-ptop, cx=px*W;
+  const pL=cx-pw/2+pw*.14, pR=cx+pw/2-pw*.14, pT=ptop+ph*.14, pB=pbot-ph*.14;
+  for(let i=objects.length-1;i>=0;i--){
+    const o=objects[i];
+    o.y+=o.speed*dt;
+    // 磁鐵：全螢幕的好東西（不吸大便、不吸死魚）會自己橫向飄向角色（各自有一點偏移，不會疊成一條），下落速度不變
+    if(magnetTimer>0&&!o.bad&&o.src!=='x5.png'&&o.y>0&&o.y+o.size<pB){
+      o.x+=(cx+o.off-(o.x+o.size/2))*Math.min(1,5*dt);
+    }
+    if(rain)o.spin=0;else o.rot+=o.spin*dt;
+    o.el.style.transform=`translate3d(${o.x}px,${o.y}px,0) rotate(${o.rot}deg)`;
+    const ins=o.inset||.16, l=o.x+o.size*ins, r=o.x+o.size*(1-ins), tp=o.y+o.size*ins, bt=o.y+o.size*(1-ins);
+    if(bt>pT+12&&tp<pB-8&&r>pL+10&&l<pR-10){
+      if(o.bad){
+        if(invulnTimer>0)continue;                       // 盾牌觸發後的短暫無敵：大便直接穿過
+        if(lives>0){                                      // 盾牌擋下大便
+          lives--;renderLives(false);invulnTimer=1;playEffect('pop');
+          if(player.animate)player.animate([{opacity:1},{opacity:.25},{opacity:1}],{duration:250,iterations:4});
+          releaseElement(o.el);objects.splice(i,1);continue;
+        }
+        if(gameOverPending)return;
+        gameOverPending=true;running=false;cancelAnimationFrame(raf);playEffect('poo');setTimeout(finishGame,900);return;
+      }
+      if(o.kind==='special'){playEffect('jump');comboHit();activateSpecial(o.src);}
+      else{
+        playEffect(o.giant?'jump':'pop');
+        const pts=o.giant?o.points:o.points*(comboTimer>0?10:1);
+        addScore(pts);comboHit();showToast('+'+pts,1100,false,o.giant);
+      }
+      releaseElement(o.el);objects.splice(i,1);
+    }else if(o.y>H+100){
+      if(o.bad){poopDodged++;unlockCheck();}else if(o.kind==='normal')comboBreak();
+      releaseElement(o.el);objects.splice(i,1);
+    }
+  }
+  unlockCheck();
+  if(running)raf=requestAnimationFrame(loop);
+}
+
+/* ========== 操作 / 事件 ========== */
+function pointer(e){if(!W)updateMetrics();setPlayer((e.clientX-screenLeft)/W);}
+gameScreen.addEventListener('touchmove',e=>{if(running)e.preventDefault();},{passive:false});
+gameScreen.addEventListener('pointerdown',e=>{if(!running||paused)return;pointer(e);});
+gameScreen.addEventListener('pointermove',e=>{if(!running||paused)return;if(e.buttons||e.pointerType==='touch')pointer(e);});
+$('#homeStart').onclick=chooseModal;
+$('#homeBest').onclick=homeModal;
+pauseBtn.onclick=pauseGame;
+$('#backHome').onclick=()=>{running=false;gameOverPending=false;cancelAnimationFrame(raf);stopMusic();saveBest();hideModal();pauseBtn.hidden=true;comboEl.hidden=true;setAura(false);livesEl.hidden=true;showScreen('home');};
+musicBtn.onclick=()=>{musicEnabled=!musicEnabled;if(musicEnabled&&running&&!paused)startMusic();else stopMusic();updateAudioButtons();};
+soundBtn.onclick=()=>{
+  soundEnabled=!soundEnabled;
+  if(!soundEnabled){try{for(const pool of Object.values(soundPools))pool.forEach(a=>a.pause());}catch(e){}}
+  updateAudioButtons();
+};
+// 按鈕點擊音效（pointerdown 優先，避免同一次點擊播兩次）
+let lastButtonPointerSound=0;
+document.addEventListener('pointerdown',e=>{
+  unlockAudio();
+  const b=e.target.closest('button');
+  if(b){lastButtonPointerSound=Date.now();if(b!==musicBtn&&b!==soundBtn)playClick();}
+},true);
+document.addEventListener('click',e=>{
+  const b=e.target.closest('button');
+  if(b&&b!==musicBtn&&b!==soundBtn&&Date.now()-lastButtonPointerSound>700)playClick();
+},true);
+// 切到背景 / 離開頁面：自動暫停並存檔
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)resumeCtx();if(document.hidden){saveBest();if(running&&!paused)pauseGame();}});
+window.addEventListener('pagehide',saveBest);
+window.addEventListener('resize',()=>{updateMetrics();setPlayer(px);});
+player.addEventListener('load',updateMetrics);
+updateAudioButtons();setPlayer(.5);
+})();
+</script>
+</body>
+</html>
