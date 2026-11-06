@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<title>艾里布里</title>
+<style>
+:root{--ink:#392719;--cream:#fff3d7;--orange:#f3a43b;--yellow:#ffd66b;--brown:#6c4328;--shadow:0 7px 0 #6a452a55}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;overscroll-behavior:none;font-family:system-ui,-apple-system,"Noto Sans TC",sans-serif;color:var(--ink);background:#000000;touch-action:none}
+button{font:inherit;cursor:pointer;color:inherit}
+#app{position:relative;width:100%;height:100dvh;overflow:hidden;background:#000000;overscroll-behavior:none;touch-action:none}
+.screen{position:absolute;inset:0;display:none;overflow:hidden;overscroll-behavior:none;touch-action:none}.screen.active{display:block}
+/* Homepage: image is background; use visible text buttons independent of artwork coordinates. */
+#home{background:#f6bd5b url('./images/index.jpg') center center/100% 100% no-repeat}
+.home-menu{position:absolute;left:50%;top:70%;transform:translateX(-50%);width:min(82%,340px);display:flex;flex-direction:column;align-items:center;gap:14px;z-index:3}
+.home-text-btn{width:100%;border:2.5px solid #392719;border-radius:999px;background:linear-gradient(#fff0c5,#ffd66b);color:#392719;padding:14px 18px;font-size:clamp(20px,5.5vw,27px);font-weight:1000;letter-spacing:1px;box-shadow:0 5px 0 #6c4328,0 8px 14px #6c432833;text-shadow:0 1px #fff8e9;transition:transform .12s,filter .12s}
+.home-text-btn:active{transform:translateY(3px) scale(.98);box-shadow:0 2px 0 #6c4328;filter:brightness(1.05)}
+#gameScreen{background:#000000}
+#gameBg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
+#topbar{position:absolute;z-index:5;top:calc(env(safe-area-inset-top) + 10px);left:12px;right:12px;display:flex;align-items:center;justify-content:space-between;gap:6px}
+.pill{background:#fff3d9eF;border:2.5px solid var(--ink);border-radius:999px;padding:6px 12px;font-weight:900;font-size:clamp(13px,3.8vw,17px);white-space:nowrap;box-shadow:2px 3px 0 #6b452833}
+#gameTitle{font-weight:1000;font-size:clamp(22px,6.4vw,36px);letter-spacing:-1px;text-shadow:2px 2px #fff8e9,-2px -2px #fff8e9,2px -2px #fff8e9,-2px 2px #fff8e9;white-space:nowrap}
+#pauseBtn{position:absolute;z-index:6;right:14px;top:calc(env(safe-area-inset-top) + 62px);border:2px solid var(--ink);border-radius:50%;width:42px;height:42px;background:#fff0d3;font-weight:1000;box-shadow:2px 3px 0 #6b452833}
+#player{position:absolute;z-index:3;width:clamp(115px,32vw,185px);height:auto;bottom:calc(env(safe-area-inset-bottom) + 22px);left:50%;transform:translateX(-50%);touch-action:none;user-select:none;pointer-events:none}
+#items{position:absolute;inset:0;z-index:2;pointer-events:none}.fall{position:absolute;left:0;top:0;height:auto;max-width:none;will-change:transform}
+#brandWatermark{position:absolute;z-index:1;left:50%;top:43%;transform:translate(-50%,-50%);text-align:center;pointer-events:none;opacity:.22;font-weight:1000;line-height:.9;color:#4b3525;letter-spacing:2px;text-shadow:1px 1px #fff3d7}
+#brandWatermark .brand{font-size:clamp(34px,11vw,76px)}#brandWatermark .studio{font-size:clamp(13px,4vw,24px);letter-spacing:5px}
+#toast{position:absolute;z-index:4;left:50%;top:23%;transform:translateX(-50%);font-size:clamp(18px,5vw,27px);font-weight:1000;text-shadow:2px 2px #fff7e7;white-space:nowrap;pointer-events:none}
+#overlay{position:absolute;inset:0;z-index:10;display:flex;align-items:center;justify-content:center;padding:24px;background:#4b2d1a66;backdrop-filter:blur(3px)}#overlay[hidden]{display:none!important}
+.modal{width:min(88%,360px);border:3px solid var(--ink);border-radius:28px;background:var(--cream);padding:24px 20px;text-align:center;box-shadow:8px 8px 0 #6b452a88;animation:pop .18s ease-out}
+@keyframes pop{from{transform:scale(.92);opacity:.5}to{transform:scale(1);opacity:1}}
+.modal h1{margin:0 0 10px;font-size:clamp(27px,8vw,39px);font-weight:1000;line-height:1.1}.modal p{font-weight:800;line-height:1.65;margin:8px 0 18px}
+.modalBtn{border:2.5px solid var(--ink);border-radius:18px;background:var(--orange);padding:11px 18px;font-size:18px;font-weight:1000;box-shadow:3px 4px 0 var(--ink);margin:5px;min-width:112px;transition:transform .12s,filter .12s}.modalBtn:active{transform:translate(2px,3px);box-shadow:1px 1px 0 var(--ink);filter:brightness(1.05)}.modalBtn.secondary{background:#f7dfaa}.row{display:flex;justify-content:center;flex-wrap:wrap;gap:8px}
+#backHome{position:absolute;z-index:8;left:12px;top:calc(env(safe-area-inset-top) + 62px);border:2px solid var(--ink);border-radius:999px;background:#fff0d3;padding:7px 12px;font-weight:900;box-shadow:2px 3px 0 #6b452833}
+@media (min-width:700px){#home{background-size:contain;background-color:#000000}#gameScreen{max-width:520px;left:50%;transform:translateX(-50%);width:100%;border-left:2px solid #5b3b2555;border-right:2px solid #5b3b2555}}
+</style>
+</head>
+<body><div id="app">
+<section id="home" class="screen active" aria-label="首頁">
+<div class="home-menu"><button id="homeStart" class="home-text-btn">開始遊戲</button><button id="homeBest" class="home-text-btn">最高分數</button></div>
+</section>
+<section id="gameScreen" class="screen" aria-label="遊戲畫面">
+<img id="gameBg" src="./images/manbg.png" alt="遊戲背景">
+<div id="topbar"><div class="pill">分數 <span id="score">0</span></div><div id="gameTitle">✦ 艾里布里 ✦</div><div class="pill">最高 <span id="best">0</span></div></div>
+<button id="backHome">⌂ 首頁</button><button id="pauseBtn" aria-label="暫停">Ⅱ</button>
+<div id="brandWatermark"><div class="brand">MAIMINE</div><div class="studio">STUDIO</div></div>
+<div id="items"></div><div id="toast"></div><img id="player" src="./images/man.png" alt="玩家角色">
+<div id="overlay" hidden><div class="modal" id="modalContent"></div></div>
+</section></div>
+<script>
+(()=>{
+'use strict';
+const $=s=>document.querySelector(s);
+const home=$('#home'), gameScreen=$('#gameScreen'), overlay=$('#overlay'), modal=$('#modalContent');
+const bg=$('#gameBg'), player=$('#player'), itemsEl=$('#items'), toastEl=$('#toast');
+const scoreEl=$('#score'),bestEl=$('#best'),pauseBtn=$('#pauseBtn');
+// Native HTMLAudio is more reliable on iPhone Safari than manually decoding Web Audio buffers.
+const soundFiles={click:'./images/click.mp3',pop:'./images/pop.mp3',jump:'./images/jump2.mp3',poo:'./images/poo.mp3',music:'./images/music2.mp3'};
+const soundPools={};
+Object.keys(soundFiles).forEach(name=>{
+  const audio=new Audio(soundFiles[name]);
+  audio.preload='auto';
+  audio.volume=name==='music'?0.45:0.8;
+  soundPools[name]=audio;
+});
+let bgMusic=soundPools.music;
+bgMusic.loop=true;
+function playEffect(name){
+  const base=soundPools[name];
+  if(!base)return;
+  try{
+    const sound=base.cloneNode(true);
+    sound.volume=0.8;
+    sound.currentTime=0;
+    const result=sound.play();
+    if(result&&typeof result.catch==='function')result.catch(error=>console.warn('音效播放失敗：'+name,error));
+  }catch(error){console.warn('音效播放失敗：'+name,error);}
+}
+function playClick(){playEffect('click');}
+function startMusic(){
+  try{
+    bgMusic.pause();
+    bgMusic.currentTime=0;
+    const result=bgMusic.play();
+    if(result&&typeof result.catch==='function')result.catch(error=>console.warn('背景音樂播放失敗',error));
+  }catch(error){console.warn('背景音樂播放失敗',error);}
+}
+function stopMusic(){
+  try{bgMusic.pause();bgMusic.currentTime=0;}catch(error){}
+}
+// Ask the browser to preload assets; actual playback starts only after a user action.
+Object.values(soundPools).forEach(audio=>{try{audio.load();}catch(error){}});
+
+const BEST_KEY='airi-brie-best';
+let score=0,best=Number(localStorage.getItem(BEST_KEY)||0),running=false,paused=false,last=0,spawnTimer=0,elapsed=0,objects=[],px=.5,raf=0,toastTimer=0,character='man';
+const common=[
+ {src:'a1.png',points:10},{src:'a2.png',points:10},{src:'b1.png',points:10},{src:'b2.png',points:10},
+ {src:'a3.png',points:15},{src:'a4.png',points:15},{src:'b3.png',points:15},{src:'b4.png',points:15},
+ {src:'a5.png',points:20},{src:'b5.png',points:20}
+];
+const rare=[{src:'x1.png',points:50},{src:'x2.png',points:80},{src:'x3.png',points:100}];
+const hazards=[{src:'shit1.png'},{src:'shit2.png'},{src:'shit3.png'}];
+const img=name=>'./images/'+name;
+bestEl.textContent=best;
+function showScreen(which){home.classList.toggle('active',which==='home');gameScreen.classList.toggle('active',which==='game')}
+function showModal(html){modal.innerHTML=html;overlay.hidden=false}
+function hideModal(){overlay.hidden=true}
+function homeModal(){showScreen('game');showModal(`<h1>最高分數</h1><p>🏆 最高紀錄<br><strong style="font-size:42px">${best}</strong></p><button class="modalBtn" id="modalHome">返回首頁</button>`);$('#modalHome').onclick=()=>{hideModal();showScreen('home')}}
+function chooseModal(){showScreen('game');showModal(`<h1>選擇遊戲角色</h1><p>請選擇你的遊戲角色</p><div class="row"><button class="modalBtn" id="chooseMan">帥哥</button><button class="modalBtn" id="chooseWoman">美女</button></div><button class="modalBtn secondary" id="chooseBack">返回首頁</button>`);$('#chooseMan').onclick=()=>{beginCharacter('man')};$('#chooseWoman').onclick=()=>{beginCharacter('woman')};$('#chooseBack').onclick=()=>{hideModal();showScreen('home')}}
+function beginCharacter(kind){character=kind;bg.src=img(kind==='man'?'manbg.png':'womanbg.png');player.src=img(kind==='man'?'man.png':'woman.png');hideModal();showScreen('game');startGame()}
+function setPlayer(x){px=Math.max(.06,Math.min(.94,x));player.style.left=(px*100)+'%';player.style.transform='translateX(-50%)'}
+function cleanObjects(){objects.forEach(o=>o.el.remove());objects=[];itemsEl.innerHTML=''}
+function startGame(){cancelAnimationFrame(raf);cleanObjects();startMusic();score=0;elapsed=0;spawnTimer=0;scoreEl.textContent='0';running=true;paused=false;pauseBtn.textContent='Ⅱ';pauseBtn.hidden=false;toastEl.textContent='';setPlayer(.5);last=performance.now();raf=requestAnimationFrame(loop)}
+function finishGame(){if(!running)return;running=false;cancelAnimationFrame(raf);stopMusic();pauseBtn.hidden=true;showModal(`<h1>遊戲結束</h1><p>你的分數：<strong>${score}</strong><br>最高分：<strong>${best}</strong><br>再來挑戰一次？</p><div class="row"><button class="modalBtn" id="retry">重新開始</button><button class="modalBtn secondary" id="endHome">返回首頁</button></div>`);$('#retry').onclick=()=>{hideModal();startGame()};$('#endHome').onclick=()=>{hideModal();showScreen('home')}}
+function pauseGame(){if(!running)return;paused=!paused;pauseBtn.textContent=paused?'▶':'Ⅱ';if(!paused){last=performance.now();raf=requestAnimationFrame(loop)}else cancelAnimationFrame(raf)}
+function showToast(text){toastEl.textContent=text;clearTimeout(toastTimer);toastTimer=setTimeout(()=>toastEl.textContent='',650)}
+function weightedItem(){let roll=Math.random();if(roll<.78)return {...common[Math.floor(Math.random()*common.length)],kind:'normal'};if(roll<.88)return {...rare[Math.floor(Math.random()*rare.length)],kind:'rare'};return {...hazards[Math.floor(Math.random()*hazards.length)],kind:'bad'};}
+function makeItem(){const data=weightedItem(),el=document.createElement('img');el.src=img(data.src);el.className='fall';el.draggable=false;const size=data.kind==='bad'?Math.max(48,Math.min(88,innerWidth*.15)):Math.max(58,Math.min(108,innerWidth*.18));el.style.width=size+'px';itemsEl.appendChild(el);const x=Math.random()*Math.max(1,innerWidth-size),y=-size;el.style.left='0';el.style.top='0';const base=280+Math.min(elapsed,90)*8;const speed=base+(data.kind==='rare'?Math.random()*115+35:data.kind==='bad'?Math.random()*150+65:Math.random()*100-20);objects.push({el,x,y,size,rot:Math.random()*70-35,spin:(Math.random()*300-150),speed,points:data.points||0,bad:data.kind==='bad',kind:data.kind,src:data.src})}
+function loop(t){if(!running)return;if(paused){raf=requestAnimationFrame(loop);return}const dt=Math.min((t-last)/1000,.045);last=t;elapsed+=dt;spawnTimer+=dt;const interval=Math.max(.24, .72-elapsed*.009);if(spawnTimer>=interval){spawnTimer=0;makeItem()}
+const p=player.getBoundingClientRect();for(let i=objects.length-1;i>=0;i--){const o=objects[i];o.y+=o.speed*dt;o.rot+=o.spin*dt;o.el.style.transform=`translate(${o.x}px,${o.y}px) rotate(${o.rot}deg)`;const r=o.el.getBoundingClientRect();if(r.bottom>p.top+20&&r.top<p.bottom&&r.right>p.left+16&&r.left<p.right-16){if(o.bad){playEffect('poo');finishGame();return}playEffect(o.kind==='rare'?'jump':'pop');score+=o.points;scoreEl.textContent=score;showToast('+'+o.points);if(score>best){best=score;localStorage.setItem(BEST_KEY,String(best));bestEl.textContent=best}o.el.remove();objects.splice(i,1)}else if(o.y>innerHeight+100){o.el.remove();objects.splice(i,1)}}if(running)raf=requestAnimationFrame(loop)}
+function pointer(e){const rect=gameScreen.getBoundingClientRect();setPlayer((e.clientX-rect.left)/rect.width)}
+gameScreen.addEventListener('touchmove',e=>{if(running)e.preventDefault()},{passive:false});
+gameScreen.addEventListener('pointerdown',e=>{if(!running||paused)return;pointer(e)});gameScreen.addEventListener('pointermove',e=>{if(!running||paused)return;if(e.buttons||e.pointerType==='touch')pointer(e)});
+$('#homeStart').onclick=()=>{chooseModal()};$('#homeBest').onclick=()=>{homeModal()};pauseBtn.onclick=pauseGame;$('#backHome').onclick=()=>{running=false;cancelAnimationFrame(raf);stopMusic();hideModal();pauseBtn.hidden=true;showScreen('home')};
+let lastButtonPointerSound=0;
+document.addEventListener('pointerdown',event=>{
+  const button=event.target.closest('button');
+  if(button){lastButtonPointerSound=Date.now();playClick();}
+},true);
+document.addEventListener('click',event=>{
+  const button=event.target.closest('button');
+  // Keyboard-generated clicks have no preceding pointerdown, so keep click as fallback.
+  if(button&&Date.now()-lastButtonPointerSound>700)playClick();
+},true);
+window.addEventListener('resize',()=>setPlayer(px));setPlayer(.5);
+})();
+</script></section></body></html>
