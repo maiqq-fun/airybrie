@@ -248,7 +248,7 @@ function hideModal(){overlay.hidden=true;}
 function goHome(){hideModal();showScreen('home');}
 function homeModal(){
   showScreen('game');
-  showModal(`<h1>最高紀錄</h1><p>💾 最高紀錄<br><strong style="font-size:42px">${best}</strong><br>🦾 最高連擊<br><strong style="font-size:42px">${bestCombo}</strong><br>⏱️ 最長時間<br><strong style="font-size:42px">${formatGameTime(bestTime)}</strong></p><button class="modalBtn" id="modalHome">返回首頁</button>`);
+  showModal(`<h1>最高紀錄</h1><p>🥇 最高分數<br><strong style="font-size:42px">${best}</strong><br>🦾 最高連擊<br><strong style="font-size:42px">${bestCombo}</strong><br>⏱️ 最長時間<br><strong style="font-size:42px">${formatGameTime(bestTime)}</strong></p><button class="modalBtn" id="modalHome">返回首頁</button>`);
   $('#modalHome').onclick=goHome;
 }
 function chooseModal(){
