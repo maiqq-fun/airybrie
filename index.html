@@ -19,6 +19,16 @@ button{font:inherit;cursor:pointer;color:inherit}
 .home-text-btn{width:100%;border:2.5px solid #392719;border-radius:999px;background:linear-gradient(#fff0c5,#ffd66b);color:#392719;padding:14px 18px;font-size:clamp(20px,5.5vw,27px);font-weight:1000;letter-spacing:1px;box-shadow:0 5px 0 #6c4328,0 8px 14px #6c432833;text-shadow:0 1px #fff8e9;transition:transform .12s,filter .12s}
 .home-text-btn:active{transform:translateY(3px) scale(.98);box-shadow:0 2px 0 #6c4328;filter:brightness(1.05)}
 #gameScreen{background:#000000}
+.ann-btn{position:absolute;z-index:5;top:calc(env(safe-area-inset-top) + 12px);right:12px;border:2px solid var(--ink);border-radius:999px;background:#fff0d3e6;padding:7px 12px;font-size:14px;font-weight:900;box-shadow:2px 3px 0 #6b452833}
+.ann-card{position:absolute;z-index:6;left:50%;top:calc(env(safe-area-inset-top) + 64px);transform:translateX(-50%);width:min(86vw,320px);border:2.5px solid var(--ink);border-radius:20px;overflow:hidden;background:rgba(255,247,226,.84);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);box-shadow:0 6px 0 rgba(108,67,40,.25),0 12px 26px rgba(0,0,0,.28);animation:annPop .26s cubic-bezier(.3,1.5,.5,1)}
+.ann-card[hidden]{display:none}
+@keyframes annPop{from{transform:translateX(-50%) scale(.82);opacity:0}to{transform:translateX(-50%) scale(1);opacity:1}}
+.ann-bar{display:flex;align-items:center;gap:8px;padding:7px 8px 7px 12px;background:rgba(255,214,107,.88);border-bottom:2.5px solid var(--ink)}
+.ann-dots{display:flex;gap:4px}.ann-dots i{display:block;width:9px;height:9px;border-radius:50%;border:1.5px solid var(--ink)}.ann-dots i:nth-child(1){background:#ff8fa3}.ann-dots i:nth-child(2){background:#ffe27a}.ann-dots i:nth-child(3){background:#8fe3a8}
+.ann-title{flex:1;font-size:14px;font-weight:1000}
+.ann-x{width:26px;height:26px;border:2px solid var(--ink);border-radius:50%;background:#ff9db0;font-size:12px;font-weight:1000;line-height:1;padding:0;box-shadow:1px 2px 0 #6b452855}
+.ann-body{padding:12px 14px 6px;font-size:14px;font-weight:800;line-height:1.75;white-space:pre-line;text-align:left}
+.ann-time{padding:0 14px 11px;font-size:11.5px;font-weight:800;opacity:.65;text-align:left}
 #gameBg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
 #topbar{position:absolute;z-index:5;top:calc(env(safe-area-inset-top) + 10px);left:12px;right:12px;display:flex;align-items:center;justify-content:space-between;gap:6px}
 .pill{background:#fff3d9eF;border:2.5px solid var(--ink);border-radius:999px;padding:6px 12px;font-weight:900;font-size:clamp(13px,3.8vw,17px);white-space:nowrap;box-shadow:2px 3px 0 #6b452833}
@@ -34,6 +44,12 @@ button{font:inherit;cursor:pointer;color:inherit}
 #combo{position:absolute;z-index:4;left:50%;top:42%;transform:translate(-50%,-50%) rotate(-4deg);display:flex;align-items:baseline;gap:8px;opacity:.55;font-family:ui-rounded,"SF Pro Rounded","Arial Rounded MT Bold","Avenir Next",system-ui,sans-serif;font-style:italic;font-weight:900;color:#fff3d7;-webkit-text-stroke:5px var(--ink);paint-order:stroke fill;text-shadow:0 4px 0 var(--ink);white-space:nowrap;pointer-events:none;user-select:none;-webkit-user-select:none}#combo .cw{font-size:clamp(22px,6.5vw,32px);letter-spacing:2px;text-transform:uppercase;color:#ffd66b}#combo .cn{font-size:clamp(36px,11vw,54px);line-height:1}#combo[hidden]{display:none}
 #dim{position:absolute;inset:0;z-index:1;background:#000;opacity:0;transition:opacity 3s;pointer-events:none}#dim.on{opacity:.25}
 #aura{position:absolute;z-index:2;left:50%;top:0;border-radius:50%;pointer-events:none;background:radial-gradient(circle,rgba(140,190,255,0) 50%,rgba(140,190,255,.6) 66%,rgba(180,150,255,0) 80%);will-change:transform;animation:auraPulse .8s ease-in-out infinite alternate}@keyframes auraPulse{from{opacity:.5}to{opacity:1}}#aura[hidden]{display:none}
+#guard{position:absolute;z-index:4;left:50%;top:0;border-radius:50%;pointer-events:none;border:3px solid rgba(190,245,255,.9);background:radial-gradient(circle at 50% 55%,rgba(120,220,255,.06) 40%,rgba(120,220,255,.28) 78%,rgba(190,250,255,.5) 100%);box-shadow:0 0 16px 4px rgba(120,220,255,.65),inset 0 0 20px rgba(200,250,255,.55);will-change:transform;animation:guardPulse .9s ease-in-out infinite alternate}
+#guard::after{content:'';position:absolute;left:17%;top:11%;width:24%;height:11%;border-radius:50%;background:rgba(255,255,255,.7);transform:rotate(-38deg)}
+@keyframes guardPulse{from{opacity:.7}to{opacity:1}}
+#guard.warn{animation:guardWarn .3s steps(1) infinite}
+@keyframes guardWarn{0%{opacity:1}50%{opacity:.2}}
+#guard[hidden]{display:none}
 #lives{position:absolute;z-index:5;left:14px;top:calc(env(safe-area-inset-top) + 108px);transform-origin:left center;font-size:22px;letter-spacing:3px;white-space:nowrap;pointer-events:none;user-select:none;-webkit-user-select:none}#lives[hidden]{display:none}
 #overlay{position:absolute;inset:0;z-index:10;display:flex;align-items:center;justify-content:center;padding:24px;background:#4b2d1a66;backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}#overlay[hidden]{display:none!important}
 .modal{max-height:calc(100dvh - 48px);overflow-y:auto;width:min(88%,360px);border:3px solid var(--ink);border-radius:28px;background:var(--cream);padding:24px 20px;text-align:center;box-shadow:8px 8px 0 #6b452a88;animation:pop .18s ease-out}
@@ -52,6 +68,12 @@ button{font:inherit;cursor:pointer;color:inherit}
 <body>
 <div id="app">
   <section id="home" class="screen active" aria-label="首頁">
+    <button id="annBtn" class="ann-btn" aria-label="公告">👽公告</button>
+    <div id="annCard" class="ann-card" role="dialog" aria-label="公告" hidden>
+      <div class="ann-bar"><span class="ann-dots"><i></i><i></i><i></i></span><span class="ann-title">👽公告</span><button id="annClose" class="ann-x" aria-label="關閉公告">✕</button></div>
+      <div class="ann-body" id="annBody"></div>
+      <div class="ann-time" id="annTime"></div>
+    </div>
     <div class="home-menu"><button id="homeStart" class="home-text-btn">🎮開始遊戲🎮</button><button id="homeBest" class="home-text-btn">🥇最高紀錄🥇</button></div>
   </section>
   <section id="gameScreen" class="screen" aria-label="遊戲畫面">
@@ -60,7 +82,7 @@ button{font:inherit;cursor:pointer;color:inherit}
     <div id="gameTimer">⏱00:00</div>
     <button id="backHome">👾首頁</button><button id="pauseBtn" aria-label="暫停">Ⅱ</button>
     <div id="audioControls"><button id="musicBtn" class="audioBtn" aria-label="切換背景音樂">🎵音樂：開</button><button id="soundBtn" class="audioBtn" aria-label="切換遊戲音效">🔊音效：開</button></div>
-    <div id="aura" hidden></div><div id="items"></div><div id="notice"></div><div id="toast"></div><div id="combo" hidden></div><div id="lives" hidden></div><img id="player" src="./images/man.png" alt="玩家角色">
+    <div id="aura" hidden></div><div id="guard" hidden></div><div id="items"></div><div id="notice"></div><div id="toast"></div><div id="combo" hidden></div><div id="lives" hidden></div><img id="player" src="./images/man.png" alt="玩家角色">
     <div id="overlay" hidden><div class="modal" id="modalContent"></div></div>
   </section>
 </div>
@@ -69,9 +91,10 @@ button{font:inherit;cursor:pointer;color:inherit}
 'use strict';
 const $=s=>document.querySelector(s);
 const home=$('#home'), gameScreen=$('#gameScreen'), overlay=$('#overlay'), modal=$('#modalContent');
-const noticeEl=$('#notice'), comboEl=$('#combo'), dimEl=$('#dim'), auraEl=$('#aura'), livesEl=$('#lives'), bg=$('#gameBg'), player=$('#player'), itemsEl=$('#items'), toastEl=$('#toast');
+const noticeEl=$('#notice'), comboEl=$('#combo'), dimEl=$('#dim'), auraEl=$('#aura'), guardEl=$('#guard'), livesEl=$('#lives'), bg=$('#gameBg'), player=$('#player'), itemsEl=$('#items'), toastEl=$('#toast');
 const scoreEl=$('#score'), bestEl=$('#best'), pauseBtn=$('#pauseBtn'), musicBtn=$('#musicBtn'), soundBtn=$('#soundBtn');
 const gameTimerEl=$('#gameTimer');
+const annBtn=$('#annBtn'), annCard=$('#annCard');
 function formatClock(seconds){const total=Math.max(0,Math.floor(seconds));return `${String(Math.floor(total/60)).padStart(2,'0')}:${String(total%60).padStart(2,'0')}`;}
 function formatGameTime(seconds){const total=Math.max(0,Math.floor(seconds)),minutes=Math.floor(total/60),secs=total%60;return minutes>0?`${minutes} 分 ${secs} 秒`:`${secs} 秒`;}
 
@@ -79,13 +102,14 @@ function formatGameTime(seconds){const total=Math.max(0,Math.floor(seconds)),min
 const IMG_DIR='./images/';
 const ITEM_MAX=288;                         // 掉落物最長邊（顯示最大約 135px，288 足夠 2x/3x 螢幕）
 const PLAYER_MAX=480;                       // 角色最長邊
-const itemNames=['a1','a2','a3','a4','a5','b1','b2','b3','b4','b5','x1','x2','x3','x5','x6','x7','shit1','shit2','shit3'].map(n=>n+'.png').concat('x4.png');
+const itemNames=['a1','a2','a3','a4','a5','b1','b2','b3','b4','b5','x1','x2','x3','x5','x6','x7','x8','shit1','shit2','shit3'].map(n=>n+'.png').concat('x4.png');
 const sizedNames=[...itemNames.map(n=>[n,ITEM_MAX]),['man.png',PLAYER_MAX],['woman.png',PLAYER_MAX]];
-const urlCache=new Map(), keepAlive=[], glowFrac=new Map();
-const glowSpecials=['x2.png','x3.png','x5.png','x6.png'];   // 這四種道具偶爾會變成放大版（x1、x4、x7 不會）
+const urlCache=new Map(), keepAlive=[], glowFrac=new Map(), missing=new Set();   // missing：載入失敗（沒上傳）的圖，不會被抽成道具
+const glowSpecials=['x2.png','x3.png','x5.png','x6.png','x8.png'];   // 這幾種道具偶爾會變成放大版（x1、x4、x7 不會）
 const glowNames=['a1','a2','a3','a4','a5','b1','b2','b3','b4','b5'].map(n=>n+'.png').concat(glowSpecials);   // 需要預先畫光暈版的圖
 // 放大倍率、下墜減速、出現機率（想微調就改這裡）
 const GIANT_SCALE=2.2, X4_SCALE=2.8, BIGPOOP_SCALE=1.8, GIANT_SLOW=.6, BIGPOOP_SLOW=.7, BIGPOOP_CHANCE=.1, GIANT_SPECIAL_CHANCE=.25;
+const CALM_EVERY=30, CALM_LEN=7, CALM_SPEED=.7, CALM_POOP=.5;   // 喘息期：每 30 秒一次，持續 7 秒，掉落速度 7 成、大便機率減半
 const img=name=>urlCache.get(name)||IMG_DIR+name;   // 縮圖失敗時自動退回原圖
 
 const toURL=c=>new Promise(res=>c.toBlob(b=>res(b?URL.createObjectURL(b):null),'image/png'));
@@ -115,7 +139,7 @@ function shrink(name,max){
       }catch(e){}
       resolve();
     };
-    im.onerror=()=>resolve();
+    im.onerror=()=>{missing.add(name);resolve();};
     im.src=IMG_DIR+name;
   });
 }
@@ -191,12 +215,12 @@ const readBestTime=()=>{try{return Number(localStorage.getItem(TIME_KEY)||0);}ca
 let bestTime=readBestTime(), bestTimeDirty=false;
 function saveBest(){try{if(bestDirty){bestDirty=false;localStorage.setItem(BEST_KEY,String(best));}if(bestComboDirty){bestComboDirty=false;localStorage.setItem(COMBO_KEY,String(bestCombo));}if(bestTimeDirty){bestTimeDirty=false;localStorage.setItem(TIME_KEY,String(Math.floor(bestTime)));}}catch(e){}}
 let score=0,best=readBest(),running=false,paused=false,gameOverPending=false,last=0,spawnTimer=0,elapsed=0,objects=[],px=.5,raf=0,toastTimer=0;
-let magnetTimer=0,giantTimer=20,shieldTimer=20,lives=0,invulnTimer=0,dimmed=false,dimEnded=false;
+let magnetTimer=0,giantTimer=20,shieldTimer=20,lives=0,invulnTimer=0,dimmed=false,dimEnded=false,guardTimer=0,calmOn=false,calmMul=1;
 let comboTimer=0,stormTimer=0,poopRainTimer=0,poopDodged=0,specialCount=0,runAchievements=[],unlockedThisRun=new Set(),specialSpawnTimer=10,lastSpecialSrc='';
 const elPools=new Map();
 
 const common=[{src:'a1.png',points:10},{src:'a2.png',points:10},{src:'b1.png',points:10},{src:'b2.png',points:10},{src:'a3.png',points:15},{src:'a4.png',points:15},{src:'b3.png',points:15},{src:'b4.png',points:15},{src:'a5.png',points:20},{src:'b5.png',points:20}];
-const specials=['x1.png','x2.png','x3.png','x4.png','x5.png','x6.png'];   // 衛生紙 x7 另外有自己的計時器
+const specials=['x1.png','x2.png','x3.png','x4.png','x5.png','x6.png','x8.png'];   // 衛生紙 x7 另外有自己的計時器
 const hazards=[{src:'shit1.png',size:58,speed:1.12},{src:'shit2.png',size:76,speed:.92},{src:'shit3.png',size:92,speed:.78}];
 const pick=arr=>arr[Math.floor(Math.random()*arr.length)];
 const achievementDefs=[
@@ -225,16 +249,16 @@ const achievementDefs=[
   {id:'c95',name:'電流擊拿棒',test:()=>maxCombo>=95},
   {id:'c110',name:'霹靂擊敗狼',test:()=>maxCombo>=110},
   // 吃特殊道具（x 系列含放大版，不含大便雨）
-  {id:'sp10',name:'幸運體質',test:()=>specialCount>=10},
-  {id:'sp15',name:'積分暴發戶',test:()=>specialCount>=15},
-  {id:'sp20',name:'既得利益者',test:()=>specialCount>=20},
-  {id:'sp25',name:'Buff吃到飽',test:()=>specialCount>=25},
-  {id:'sp30',name:'無敵槓桿王',test:()=>specialCount>=30}
+  {id:'sp5',name:'幸運體質',test:()=>specialCount>=5},
+  {id:'sp9',name:'積分暴發戶',test:()=>specialCount>=9},
+  {id:'sp13',name:'既得利益者',test:()=>specialCount>=13},
+  {id:'sp17',name:'Buff吃到飽',test:()=>specialCount>=17},
+  {id:'sp21',name:'宇宙無敵槓桿王',test:()=>specialCount>=21}
 ];
 bestEl.textContent=best;
 
 /* ========== 版面尺寸快取（避免每幀強制重排） ========== */
-let W=0,H=0,screenLeft=0,pw=0,ptop=0,pbot=0;
+let W=0,H=0,screenLeft=0,pw=0,ptop=0,pbot=0,guardCY=0,guardR=0;
 function updateMetrics(){
   const sr=gameScreen.getBoundingClientRect();
   if(!sr.width)return;
@@ -242,6 +266,7 @@ function updateMetrics(){
   const pr=player.getBoundingClientRect();
   pw=pr.width;ptop=pr.top-sr.top;pbot=pr.bottom-sr.top;
   const as=pw*1.8;auraEl.style.width=auraEl.style.height=as+'px';auraEl.style.top=((ptop+pbot)/2-as/2)+'px';
+  const gs=Math.max(pw,pbot-ptop)*1.25;guardEl.style.width=guardEl.style.height=gs+'px';guardEl.style.top=((ptop+pbot)/2-gs/2)+'px';guardR=gs/2;guardCY=(ptop+pbot)/2;
 }
 
 /* ========== 連擊（不錯過累積；大便不計入） ========== */
@@ -268,8 +293,13 @@ function setAura(on){
   else auraEl.hidden=true;
 }
 
+function setGuard(on){
+  if(on){updateMetrics();guardEl.hidden=false;guardEl.classList.remove('warn');guardEl.style.transform=`translateX(calc(-50% + ${(px-.5)*W}px))`;}
+  else{guardEl.hidden=true;guardEl.classList.remove('warn');}
+}
+
 /* ========== 畫面 / 對話框 ========== */
-function showScreen(which){home.classList.toggle('active',which==='home');gameScreen.classList.toggle('active',which==='game');}
+function showScreen(which){home.classList.toggle('active',which==='home');gameScreen.classList.toggle('active',which==='game');if(which!=='home')annCard.hidden=true;}
 function showModal(html){modal.innerHTML=html;overlay.hidden=false;}
 function hideModal(){overlay.hidden=true;}
 function goHome(){hideModal();showScreen('home');}
@@ -295,7 +325,7 @@ async function beginCharacter(kind){
 function setPlayer(x){
   px=Math.max(.06,Math.min(.94,x));
   const tf=`translateX(calc(-50% + ${(px-.5)*W}px))`;
-  player.style.transform=tf;if(!auraEl.hidden)auraEl.style.transform=tf;
+  player.style.transform=tf;if(!auraEl.hidden)auraEl.style.transform=tf;if(!guardEl.hidden)guardEl.style.transform=tf;
 }
 
 /* ========== 掉落物元件池 ========== */
@@ -315,7 +345,7 @@ function startGame(){
   cancelAnimationFrame(raf);cleanObjects();gameOverPending=false;startMusic();
   score=0;elapsed=0;gameTimerEl.textContent='⏱00:00';spawnTimer=0;comboTimer=stormTimer=poopRainTimer=0;
   specialSpawnTimer=8+Math.random()*5;lastSpecialSrc='';poopDodged=0;specialCount=0;runAchievements=[];unlockedThisRun=new Set();
-  combo=maxCombo=0;comboEl.hidden=true;magnetTimer=0;setAura(false);lives=0;invulnTimer=0;renderLives(false);giantTimer=15+Math.random()*10;shieldTimer=18+Math.random()*10;dimmed=false;dimEnded=false;dimEl.style.transition='none';dimEl.classList.remove('on');void dimEl.offsetWidth;dimEl.style.transition='';scoreEl.textContent='0';running=true;paused=false;pauseBtn.textContent='Ⅱ';pauseBtn.hidden=false;toastEl.textContent='';noticeClear();
+  combo=maxCombo=0;comboEl.hidden=true;magnetTimer=0;setAura(false);lives=0;invulnTimer=0;renderLives(false);giantTimer=15+Math.random()*10;shieldTimer=18+Math.random()*10;guardTimer=0;setGuard(false);calmOn=false;calmMul=1;dimmed=false;dimEnded=false;dimEl.style.transition='none';dimEl.classList.remove('on');void dimEl.offsetWidth;dimEl.style.transition='';scoreEl.textContent='0';running=true;paused=false;pauseBtn.textContent='Ⅱ';pauseBtn.hidden=false;toastEl.textContent='';noticeClear();
   updateMetrics();setPlayer(.5);
   last=performance.now();raf=requestAnimationFrame(loop);
 }
@@ -328,7 +358,7 @@ function achHTML(list){
 }
 function finishGame(){
   if(!running&&!gameOverPending)return;
-  gameOverPending=false;running=false;cancelAnimationFrame(raf);stopMusic();saveBest();noticeClear();pauseBtn.hidden=true;comboEl.hidden=true;setAura(false);livesEl.hidden=true;
+  gameOverPending=false;running=false;cancelAnimationFrame(raf);stopMusic();saveBest();noticeClear();pauseBtn.hidden=true;comboEl.hidden=true;setAura(false);setGuard(false);livesEl.hidden=true;
   const head=achHTML(runAchievements);
   showModal(`${head}<p>你的分數：<strong>${score}</strong><br>最高分數：<strong>${best}</strong><br>本局最高連擊：<strong>${maxCombo}</strong><br>本局遊玩時間：<strong>${formatGameTime(elapsed)}</strong><br></p><div class="row"><button class="modalBtn" id="retry">再玩一次</button><button class="modalBtn secondary" id="endHome">返回首頁</button></div>`);
   $('#retry').onclick=()=>{hideModal();startGame();};
@@ -400,6 +430,7 @@ function activateSpecial(src,big){
   else if(src==='x4.png'){addScore(1000);showNotice('🌱+1000',N);}
   else if(src==='x6.png'){magnetTimer=dur;setAura(true);showNotice(big?'🧲吸引力法則 10秒鐘':'🧲強力磁鐵 5秒鐘',N);}
   else if(src==='x7.png'){lives=Math.min(3,lives+1);renderLives(true);showNotice('🧻守護天屎降臨',N);}
+  else if(src==='x8.png'){guardTimer=dur;setGuard(true);showNotice(big?'🛡️屎不了 10秒鐘':'🛡️不怕屎 5秒鐘',N);}
   else if(src==='x5.png'){
     poopRainTimer=dur;
     for(const o of objects){
@@ -422,10 +453,10 @@ function weightedItem(){
     return {src:'x7.png',kind:'special',points:0};
   }
   // 其他特殊道具有自己的計時器，且不會連續出現同一種；有限時效果進行中時不出新道具
-  const busy=comboTimer>0||stormTimer>0||poopRainTimer>0||magnetTimer>0;
+  const busy=comboTimer>0||stormTimer>0||poopRainTimer>0||magnetTimer>0||guardTimer>0;
   if(specialSpawnTimer<=0&&!busy){
     const giantOn=objects.some(o=>o.giant);
-    const pool=specials.filter(s=>s!==lastSpecialSrc&&!(giantOn&&s==='x2.png'));   // 巨大帽子在場時不出肉泥
+    const pool=specials.filter(s=>s!==lastSpecialSrc&&!(giantOn&&s==='x2.png')&&!missing.has(s));   // 巨大帽子在場時不出肉泥
     if(pool.length){const src=pick(pool);lastSpecialSrc=src;specialSpawnTimer=10+Math.random()*5;return {src,kind:'special',points:0,giant:glowSpecials.includes(src)&&Math.random()<GIANT_SPECIAL_CHANCE};}
     specialSpawnTimer=4;
   }
@@ -437,7 +468,7 @@ function weightedItem(){
   }
   const roll=Math.random();
   if(roll<.78)return {...pick(common),kind:'normal'};
-  const hazardChance=Math.min(.18,.08+elapsed/240);
+  const hazardChance=Math.min(.18,.08+elapsed/240)*(calmOn?CALM_POOP:1);
   if(roll<.78+hazardChance)return pickHazard();
   return {...pick(common),kind:'normal'};
 }
@@ -472,9 +503,14 @@ function loop(t){
   const dt=Math.min((t-last)/1000,.045);last=t;elapsed+=dt;gameTimerEl.textContent='⏱'+formatClock(elapsed);
   comboTimer=Math.max(0,comboTimer-dt);stormTimer=Math.max(0,stormTimer-dt);poopRainTimer=Math.max(0,poopRainTimer-dt);
   magnetTimer=Math.max(0,magnetTimer-dt);if(magnetTimer<=0&&!auraEl.hidden)setAura(false);
+  if(guardTimer>0){guardTimer=Math.max(0,guardTimer-dt);guardEl.classList.toggle('warn',guardTimer>0&&guardTimer<1.5);if(guardTimer<=0)setGuard(false);}   // 最後 1.5 秒閃爍提醒
+  // 喘息期：每 CALM_EVERY 秒一次、持續 CALM_LEN 秒；速度是漸進變慢 / 變回來，不會突然跳
+  const calmNow=elapsed>=CALM_EVERY&&(elapsed%CALM_EVERY)<CALM_LEN;
+  if(calmNow!==calmOn){calmOn=calmNow;showNotice(calmOn?'😪喘口氣':'🔥跑酷時間',2000);}
+  calmMul+=((calmOn?CALM_SPEED:1)-calmMul)*Math.min(1,3*dt);
   invulnTimer=Math.max(0,invulnTimer-dt);
   giantTimer-=dt;shieldTimer-=dt;
-  if(!(comboTimer>0||stormTimer>0||poopRainTimer>0||magnetTimer>0))specialSpawnTimer-=dt;
+  if(!(comboTimer>0||stormTimer>0||poopRainTimer>0||magnetTimer>0||guardTimer>0))specialSpawnTimer-=dt;
   if(dimmed&&!dimEnded&&elapsed>=55){dimEnded=true;dimEl.classList.remove('on');}   // 變暗 15 秒後恢復
   if(elapsed>bestTime){bestTime=elapsed;bestTimeDirty=true;}
   if(!dimmed&&elapsed>=40){dimmed=true;dimEl.classList.add('on');showNotice('⚡️神經反射超越人類⚡️',2600);}
@@ -487,7 +523,7 @@ function loop(t){
   const pL=cx-pw/2+pw*.14, pR=cx+pw/2-pw*.14, pT=ptop+ph*.14, pB=pbot-ph*.14;
   for(let i=objects.length-1;i>=0;i--){
     const o=objects[i];
-    o.y+=o.speed*dt;
+    o.y+=o.speed*dt*calmMul;
     // 磁鐵：全螢幕的好東西（不吸大便、不吸死魚）會自己橫向飄向角色（各自有一點偏移，不會疊成一條），下落速度不變
     if(magnetTimer>0&&!o.bad&&o.src!=='x5.png'&&o.y>0&&o.y+o.size<pB){
       o.x+=(cx+o.off-(o.x+o.size/2))*Math.min(1,5*dt);
@@ -495,8 +531,17 @@ function loop(t){
     if(rain)o.spin=0;else o.rot+=o.spin*dt;
     o.el.style.transform=`translate3d(${o.x}px,${o.y}px,0) rotate(${o.rot}deg)`+(o.pulse?` scale(${(1+.05*Math.sin(elapsed*5+o.ph)).toFixed(3)})`:'');
     const ins=o.inset||.16, l=o.x+o.size*ins, r=o.x+o.size*(1-ins), tp=o.y+o.size*ins, bt=o.y+o.size*(1-ins);
+    // 防護罩期間：大便只要碰到泡泡（圓形）就被擋下，不會致死，也不算閃過
+    if(o.bad&&guardTimer>0){
+      const dx=o.x+o.size/2-cx, dy=o.y+o.size/2-guardCY, rr=guardR+o.size*.25;
+      if(dx*dx+dy*dy<rr*rr){playEffect('pop');if(guardEl.animate)guardEl.animate([{filter:'brightness(2.2)'},{filter:'brightness(1)'}],{duration:200});releaseElement(o.el);objects.splice(i,1);continue;}
+    }
     if(bt>pT+12&&tp<pB-8&&r>pL+10&&l<pR-10){
       if(o.bad){
+        if(guardTimer>0){                                 // 防護罩擋下大便（不算閃過）
+          playEffect('pop');if(guardEl.animate)guardEl.animate([{filter:'brightness(2.2)'},{filter:'brightness(1)'}],{duration:200});
+          releaseElement(o.el);objects.splice(i,1);continue;
+        }
         if(invulnTimer>0)continue;                       // 衛生紙觸發後的短暫無敵：大便直接穿過
         if(lives>0){                                      // 衛生紙擋下大便
           lives--;renderLives(false);invulnTimer=1;playEffect('pop');
@@ -514,7 +559,7 @@ function loop(t){
       }
       releaseElement(o.el);objects.splice(i,1);
     }else if(o.y>H+100){
-      if(o.bad){poopDodged++;unlockCheck();}else if(o.kind==='normal')comboBreak();
+      if(o.bad){if(guardTimer<=0){poopDodged++;unlockCheck();}}else if(o.kind==='normal')comboBreak();   // 防護罩期間掉出去的大便不算閃過
       releaseElement(o.el);objects.splice(i,1);
     }
   }
@@ -530,7 +575,7 @@ gameScreen.addEventListener('pointermove',e=>{if(!running||paused)return;if(e.bu
 $('#homeStart').onclick=chooseModal;
 $('#homeBest').onclick=homeModal;
 pauseBtn.onclick=pauseGame;
-$('#backHome').onclick=()=>{running=false;gameOverPending=false;cancelAnimationFrame(raf);stopMusic();saveBest();noticeClear();hideModal();pauseBtn.hidden=true;comboEl.hidden=true;setAura(false);livesEl.hidden=true;showScreen('home');};
+$('#backHome').onclick=()=>{running=false;gameOverPending=false;cancelAnimationFrame(raf);stopMusic();saveBest();noticeClear();hideModal();pauseBtn.hidden=true;comboEl.hidden=true;setAura(false);setGuard(false);livesEl.hidden=true;showScreen('home');};
 musicBtn.onclick=()=>{musicEnabled=!musicEnabled;if(musicEnabled&&running&&!paused)startMusic();else stopMusic();updateAudioButtons();};
 soundBtn.onclick=()=>{
   soundEnabled=!soundEnabled;
@@ -553,6 +598,21 @@ document.addEventListener('visibilitychange',()=>{if(!document.hidden)resumeCtx(
 window.addEventListener('pagehide',saveBest);
 window.addEventListener('resize',()=>{updateMetrics();setPlayer(px);});
 player.addEventListener('load',updateMetrics);
+/* ========== 公告 ========== */
+// 要發新公告：改下面的 ver（更新時間）和 body（內容）。玩家下次打開會自動跳出一次，之後只能按首頁右上角的「👽公告」查看
+const ANN={ver:'2026.11.08 13:30',body:`小提示：Safari網頁開啟後
+右下角點選
+「⋯」 👉🏿 「分享」 👉🏿 「加入主畫面」
+透過APP玩起來會更流暢唷🤡`};
+const ANN_KEY='airi-brie-ann-seen';
+$('#annBody').textContent=ANN.body;$('#annTime').textContent='Ⓜ️最近更新時間 '+ANN.ver;
+const annShow=()=>{annCard.hidden=false;};
+const annHide=()=>{annCard.hidden=true;};
+annBtn.onclick=()=>{annCard.hidden?annShow():annHide();};
+$('#annClose').onclick=annHide;
+(()=>{let seen='';try{seen=localStorage.getItem(ANN_KEY)||'';}catch(e){}
+  if(seen!==ANN.ver)setTimeout(()=>{if(home.classList.contains('active')){annShow();try{localStorage.setItem(ANN_KEY,ANN.ver);}catch(e){}}},500);
+})();
 updateAudioButtons();setPlayer(.5);
 })();
 </script>
