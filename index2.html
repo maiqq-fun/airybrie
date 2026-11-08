@@ -67,7 +67,7 @@ button{font:inherit;cursor:pointer;color:inherit}
 .profile-input-row{display:flex;align-items:center;justify-content:center;gap:8px;margin:12px 0 16px;font-weight:1000;font-size:18px}.profile-input-row label{white-space:nowrap}.profile-input{width:130px;min-width:0;border:2px solid var(--ink);border-radius:12px;padding:9px 10px;background:#fffdf4;color:var(--ink);font:inherit;font-weight:900;text-align:center}.small-note{font-size:12px!important;opacity:.72;margin:10px 0!important}.panel-list{display:flex;flex-direction:column;gap:8px;text-align:left;margin:12px 0}.panel-row{border:2px solid #6c4328;border-radius:14px;background:#fff8e8;padding:9px 11px;font-weight:900;line-height:1.45}.panel-row small{display:block;font-size:12px;opacity:.7}.tab-row{display:flex;justify-content:center;gap:5px;flex-wrap:wrap;margin:10px 0}.tab-btn{border:2px solid var(--ink);border-radius:999px;background:#f7dfaa;padding:7px 11px;font-weight:1000}.tab-btn.active{background:var(--orange)}.field-label{display:block;text-align:left;font-weight:1000;margin:12px 0 5px}.survey-select{display:flex;gap:5px;flex-wrap:wrap;justify-content:center}.survey-option{border:2px solid var(--ink);border-radius:14px;background:#fff8e8;padding:8px 10px;font-weight:900}.survey-option.selected{background:#ffd66b;box-shadow:2px 3px 0 var(--ink)}.survey-text{width:100%;min-height:76px;border:2px solid var(--ink);border-radius:12px;padding:10px;background:#fffdf4;color:var(--ink);font:inherit;resize:vertical}.rank-number{display:inline-block;min-width:26px;font-weight:1000}
 .tab-row{flex-wrap:nowrap}.tab-btn{padding:7px 9px;font-size:15px;white-space:nowrap}
 .panel-row.lb{display:flex;align-items:center;gap:8px}.panel-row.lb .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.panel-row.mine{background:#ffe9a8}
-.modal p.newbest{margin:-6px 0 8px;font-size:19px;font-weight:1000}.modal p.up{margin:0 0 14px;font-size:13px;opacity:.8;min-height:1.4em}
+.modal p.newbest{margin:-6px 0 8px;font-size:19px;font-weight:1000}.modal p.up{white-space:pre-line;margin:0 0 14px;font-size:13px;opacity:.8;min-height:1.4em}
 .modalBtn:disabled{opacity:.6;filter:grayscale(.35);transform:none;box-shadow:3px 4px 0 var(--ink);cursor:default}
 .fun-row{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;padding:4px 2px 6px}
 .fun-tile{border:2.5px solid var(--ink);border-radius:16px;background:linear-gradient(#fff8e8,#ffe9b5);padding:7px 0 6px;display:flex;flex-direction:column;align-items:center;gap:1px;box-shadow:0 3px 0 var(--ink);transition:transform .12s,background .12s,box-shadow .12s}
@@ -132,9 +132,11 @@ let currentGameId='',lastRec=null,bestAtStart=0,rankMode='score',boardData=null,
 const setNickname=name=>{profile.nickname=clip(String(name||'').replace(/[<>&"'`\\]/g,'').trim(),5)||DEFAULT_NAME;writeJSON(PROFILE_KEY,profile);$('#gameTitle').textContent='✦ '+profile.nickname+' ✦';};
 const safeText=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
+let lastApiErr='';
 async function apiFetch(url,opt){
   const ctl=new AbortController(),t=setTimeout(()=>ctl.abort(),12000);
   try{const r=await fetch(url,{...opt,signal:ctl.signal});if(!r.ok)throw new Error('http '+r.status);return await r.json();}
+  catch(e){lastApiErr=(e&&e.name||'Error')+': '+(e&&e.message||'');throw e;}
   finally{clearTimeout(t);}
 }
 const apiPost=body=>BACKEND_URL?apiFetch(BACKEND_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(body)}):Promise.reject(new Error('no backend'));
@@ -143,9 +145,10 @@ const apiGet=params=>BACKEND_URL?apiFetch(BACKEND_URL+'?'+new URLSearchParams(pa
 /* ----- 成績上傳：先放進待傳清單，成功才移除；失敗會在下次連線 / 回到遊戲時自動補傳 ----- */
 const upState=new Map();   // gameId -> 'pending' | 'ok' | 'fail'
 const UP_TEXT={pending:'🛸成績上傳中…',ok:'🚀成績已上傳',fail:'💨上傳失敗 下次連線會自動補傳'};
+const upText=g=>{const k=upState.get(g)||'';return k==='fail'&&lastApiErr?UP_TEXT.fail+'\n（'+lastApiErr+'）':(UP_TEXT[k]||'');};
 const getQueue=()=>{const q=readJSON(QUEUE_KEY,[]);return Array.isArray(q)?q:[];};
 const setQueue=q=>writeJSON(QUEUE_KEY,q.slice(-30));
-function refreshUpStatus(){const el=$('#upStatus');if(el)el.textContent=UP_TEXT[upState.get(el.dataset.gid)]||'';}
+function refreshUpStatus(){const el=$('#upStatus');if(el)el.textContent=upText(el.dataset.gid);}
 let flushing=null;
 function flushQueue(){
   if(flushing)return flushing;
@@ -222,12 +225,12 @@ async function loadBoard(mode){
   try{
     if(getQueue().length)await Promise.race([flushQueue(),sleep(4000)]);   // 先把還沒傳的成績補傳，名次才準
     const d=await apiGet({action:'board',pid:profile.id});
-    if(!d||!d.ok)throw new Error('bad');
+    if(!d||!d.ok){lastApiErr='回傳內容不對：'+JSON.stringify(d).slice(0,80);throw new Error('bad');}
     if(tok!==boardTok)return;
     boardData=d;renderBoard();
   }catch(e){
     if(tok!==boardTok)return;
-    showModal(`<h1>🏆排行榜</h1><p>連不上排行榜😿 請稍後再試</p><div class="row"><button class="modalBtn" id="rankRefresh">重新整理</button><button class="modalBtn secondary" id="rankHome">返回首頁</button></div>`);bindBoardBtns();
+    showModal(`<h1>🏆排行榜</h1><p>連不上排行榜😿 請稍後再試</p><p class="small-note">${safeText(lastApiErr)}</p><div class="row"><button class="modalBtn" id="rankRefresh">重新整理</button><button class="modalBtn secondary" id="rankHome">返回首頁</button></div>`);bindBoardBtns();
   }
 }
 const openLeaderboard=mode=>loadBoard(mode||'score');
