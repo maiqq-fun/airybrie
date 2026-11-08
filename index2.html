@@ -15,8 +15,8 @@ button{font:inherit;cursor:pointer;color:inherit}
 #app{position:relative;width:100%;height:100dvh;overflow:hidden;background:#000000;overscroll-behavior:none;touch-action:none}
 .screen{position:absolute;inset:0;display:none;overflow:hidden;overscroll-behavior:none;touch-action:none}.screen.active{display:block}
 #home{background:#f6bd5b url('./images/index.jpg') center center/cover no-repeat}
-.home-menu{position:absolute;left:50%;top:70%;transform:translateX(-50%);width:min(82%,340px);display:flex;flex-direction:column;align-items:center;gap:14px;z-index:3}
-.home-text-btn{width:100%;border:2.5px solid #392719;border-radius:999px;background:linear-gradient(#fff0c5,#ffd66b);color:#392719;padding:14px 18px;font-size:clamp(20px,5.5vw,27px);font-weight:1000;letter-spacing:1px;box-shadow:0 5px 0 #6c4328,0 8px 14px #6c432833;text-shadow:0 1px #fff8e9;transition:transform .12s,filter .12s}
+.home-menu{position:absolute;left:50%;top:70%;transform:translateX(-50%);width:min(88%,360px);display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:10px;z-index:3}
+.home-text-btn{width:calc(50% - 5px);border:2.5px solid #392719;border-radius:999px;background:linear-gradient(#fff0c5,#ffd66b);color:#392719;padding:11px 9px;font-size:clamp(14px,4vw,18px);font-weight:1000;letter-spacing:.3px;box-shadow:0 5px 0 #6c4328,0 8px 14px #6c432833;text-shadow:0 1px #fff8e9;transition:transform .12s,filter .12s}.home-text-btn:first-child{width:100%;padding:15px 18px;font-size:clamp(23px,6vw,30px);letter-spacing:1px}
 .home-text-btn:active{transform:translateY(3px) scale(.98);box-shadow:0 2px 0 #6c4328;filter:brightness(1.05)}
 #gameScreen{background:#000000}
 .ann-btn{position:absolute;z-index:5;top:calc(env(safe-area-inset-top) + 12px);right:12px;border:2px solid var(--ink);border-radius:999px;background:#fff0d3e6;padding:7px 12px;font-size:14px;font-weight:900;box-shadow:2px 3px 0 #6b452833}
@@ -583,7 +583,7 @@ gameScreen.addEventListener('touchmove',e=>{if(running)e.preventDefault();},{pas
 gameScreen.addEventListener('pointerdown',e=>{if(!running||paused)return;pointer(e);});
 gameScreen.addEventListener('pointermove',e=>{if(!running||paused)return;if(e.buttons||e.pointerType==='touch')pointer(e);});
 $('#homeStart').onclick=chooseModal;
-$('#homeBest').onclick=homeModal;
+// 首頁沒有 homeBest 元素；移除錯誤綁定，避免初始化中斷。
 $('#homeReport').onclick=openReport;
 $('#homeRank').onclick=()=>openLeaderboard('score');
 pauseBtn.onclick=pauseGame;
