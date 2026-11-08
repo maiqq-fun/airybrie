@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#000000">
 <link rel="apple-touch-icon" href="./images/shit3.png">
-<meta name="apple-mobile-web-app-title" content="艾里布里">
-<title>MAIMINE GAME</title>
+<meta name="apple-mobile-web-app-title" content="Airybrie">
+<title>Airybrie</title>
 <style>
 :root{--ink:#392719;--cream:#fff3d7;--orange:#f3a43b;--yellow:#ffd66b;--brown:#6c4328;--shadow:0 7px 0 #6a452a55}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -64,7 +64,19 @@ button{font:inherit;cursor:pointer;color:inherit}
 #backHome{position:absolute;z-index:8;left:12px;top:calc(env(safe-area-inset-top) + 62px);border:2px solid var(--ink);border-radius:999px;background:#fff0d3;padding:7px 12px;font-weight:900;box-shadow:2px 3px 0 #6b452833}
 @media (min-width:700px){#home{background-size:contain;background-color:#000000}#gameScreen{max-width:520px;left:50%;transform:translateX(-50%);width:100%;border-left:2px solid #5b3b2555;border-right:2px solid #5b3b2555}}
 
-.profile-input-row{display:flex;align-items:center;justify-content:center;gap:8px;margin:12px 0 16px;font-weight:1000;font-size:18px}.profile-input-row label{white-space:nowrap}.profile-input{width:130px;min-width:0;border:2px solid var(--ink);border-radius:12px;padding:9px 10px;background:#fffdf4;color:var(--ink);font:inherit;font-weight:900;text-align:center}.small-note{font-size:12px!important;opacity:.72;margin:10px 0!important}.panel-list{display:flex;flex-direction:column;gap:8px;text-align:left;margin:12px 0}.panel-row{border:2px solid #6c4328;border-radius:14px;background:#fff8e8;padding:9px 11px;font-weight:900;line-height:1.45}.panel-row small{display:block;font-size:12px;opacity:.7}.tab-row{display:flex;justify-content:center;gap:5px;flex-wrap:wrap;margin:10px 0}.tab-btn{border:2px solid var(--ink);border-radius:999px;background:#f7dfaa;padding:7px 11px;font-weight:1000}.tab-btn.active{background:var(--orange)}.field-label{display:block;text-align:left;font-weight:1000;margin:12px 0 5px}.survey-select{display:flex;gap:5px;flex-wrap:wrap;justify-content:center}.survey-option{border:2px solid var(--ink);border-radius:14px;background:#fff8e8;padding:8px 10px;font-weight:900}.survey-option.selected{background:#ffd66b;box-shadow:2px 3px 0 var(--ink)}.survey-text{width:100%;min-height:76px;border:2px solid var(--ink);border-radius:12px;padding:10px;background:#fffdf4;color:var(--ink);font:inherit;resize:vertical}.rank-number{display:inline-block;min-width:26px;font-weight:1000}.</style>
+.profile-input-row{display:flex;align-items:center;justify-content:center;gap:8px;margin:12px 0 16px;font-weight:1000;font-size:18px}.profile-input-row label{white-space:nowrap}.profile-input{width:130px;min-width:0;border:2px solid var(--ink);border-radius:12px;padding:9px 10px;background:#fffdf4;color:var(--ink);font:inherit;font-weight:900;text-align:center}.small-note{font-size:12px!important;opacity:.72;margin:10px 0!important}.panel-list{display:flex;flex-direction:column;gap:8px;text-align:left;margin:12px 0}.panel-row{border:2px solid #6c4328;border-radius:14px;background:#fff8e8;padding:9px 11px;font-weight:900;line-height:1.45}.panel-row small{display:block;font-size:12px;opacity:.7}.tab-row{display:flex;justify-content:center;gap:5px;flex-wrap:wrap;margin:10px 0}.tab-btn{border:2px solid var(--ink);border-radius:999px;background:#f7dfaa;padding:7px 11px;font-weight:1000}.tab-btn.active{background:var(--orange)}.field-label{display:block;text-align:left;font-weight:1000;margin:12px 0 5px}.survey-select{display:flex;gap:5px;flex-wrap:wrap;justify-content:center}.survey-option{border:2px solid var(--ink);border-radius:14px;background:#fff8e8;padding:8px 10px;font-weight:900}.survey-option.selected{background:#ffd66b;box-shadow:2px 3px 0 var(--ink)}.survey-text{width:100%;min-height:76px;border:2px solid var(--ink);border-radius:12px;padding:10px;background:#fffdf4;color:var(--ink);font:inherit;resize:vertical}.rank-number{display:inline-block;min-width:26px;font-weight:1000}
+.tab-row{flex-wrap:nowrap}.tab-btn{padding:7px 9px;font-size:15px;white-space:nowrap}
+.panel-row.lb{display:flex;align-items:center;gap:8px}.panel-row.lb .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.panel-row.mine{background:#ffe9a8}
+.modal p.newbest{margin:-6px 0 8px;font-size:19px;font-weight:1000}.modal p.up{margin:0 0 14px;font-size:13px;opacity:.8;min-height:1.4em}
+.modalBtn:disabled{opacity:.6;filter:grayscale(.35);transform:none;box-shadow:3px 4px 0 var(--ink);cursor:default}
+.fun-row{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;padding:4px 2px 6px}
+.fun-tile{border:2.5px solid var(--ink);border-radius:16px;background:linear-gradient(#fff8e8,#ffe9b5);padding:7px 0 6px;display:flex;flex-direction:column;align-items:center;gap:1px;box-shadow:0 3px 0 var(--ink);transition:transform .12s,background .12s,box-shadow .12s}
+.fun-tile .fe{font-size:24px;line-height:1.15}.fun-tile .fn{font-size:14px;font-weight:1000}
+.fun-tile:active{transform:translateY(2px);box-shadow:0 1px 0 var(--ink)}
+.fun-tile.selected{background:linear-gradient(#ffe27a,#f3a43b);transform:translateY(-3px) scale(1.08);box-shadow:0 5px 0 var(--ink)}
+.diff-row{display:grid;grid-template-columns:1fr 1fr;gap:6px}.diff-row .survey-option{padding:9px 6px}
+.survey-msg{min-height:1.4em;margin:4px 0 8px!important;font-size:14px;color:#b3261e}
+</style>
 </head>
 <body>
 <div id="app">
@@ -84,8 +96,8 @@ button{font:inherit;cursor:pointer;color:inherit}
     <button id="backHome">👾首頁</button><button id="pauseBtn" aria-label="暫停">Ⅱ</button>
     <div id="audioControls"><button id="musicBtn" class="audioBtn" aria-label="切換背景音樂">🎵音樂：開</button><button id="soundBtn" class="audioBtn" aria-label="切換遊戲音效">🔊音效：開</button></div>
     <div id="aura" hidden></div><div id="guard" hidden></div><div id="items"></div><div id="notice"></div><div id="toast"></div><div id="combo" hidden></div><div id="lives" hidden></div><img id="player" src="./images/man.png" alt="玩家角色">
-    <div id="overlay" hidden><div class="modal" id="modalContent"></div></div>
   </section>
+  <div id="overlay" hidden><div class="modal" id="modalContent"></div></div>
 </div>
 <script>
 (()=>{
@@ -98,25 +110,173 @@ const gameTimerEl=$('#gameTimer');
 const annBtn=$('#annBtn'), annCard=$('#annCard');
 function formatClock(seconds){const total=Math.max(0,Math.floor(seconds));return `${String(Math.floor(total/60)).padStart(2,'0')}:${String(total%60).padStart(2,'0')}`;}
 function formatGameTime(seconds){const total=Math.max(0,Math.floor(seconds)),minutes=Math.floor(total/60),secs=total%60;return minutes>0?`${minutes} 分 ${secs} 秒`:`${secs} 秒`;}
-const PROFILE_KEY='maimine-player-profile-v1', RECORD_KEY='maimine-local-game-records-v1', SURVEY_KEY='maimine-local-surveys-v1';
+/* ========== 玩家資料 / 後端連線 ========== */
+// Google Apps Script 網頁應用程式網址（結尾 /exec）。留空 = 不連線（排行榜會顯示連線失敗）
+const BACKEND_URL='https://script.google.com/macros/s/AKfycbzJejhVFF83BZNEPHMXfAEvY1ZElxeOxgui4HzuVuf8NZy1uiMiDVOTiSMZcO_KmQXISA/exec';
+const PROFILE_KEY='maimine-player-profile-v1', RECORD_KEY='maimine-local-game-records-v1', QUEUE_KEY='maimine-upload-queue-v1', SURVEY_DONE_KEY='maimine-survey-done-ver';
+const DEFAULT_NAME='無名貓奴';
 const readJSON=(key,fallback)=>{try{return JSON.parse(localStorage.getItem(key)||'null')??fallback;}catch(e){return fallback;}};
 const writeJSON=(key,value)=>{try{localStorage.setItem(key,JSON.stringify(value));return true;}catch(e){return false;}};
-let profile=readJSON(PROFILE_KEY,null);if(!profile||!profile.id){profile={id:'p_'+(crypto.randomUUID?crypto.randomUUID():Date.now()+'_'+Math.random().toString(36).slice(2)),nickname:'無名貓奴',nicknameSet:false};writeJSON(PROFILE_KEY,profile);}if(typeof profile.nicknameSet==='undefined')profile.nicknameSet=profile.nickname!=='無名貓奴';
-let currentGameId='',currentSurveySubmitted=false,rankMode='score';
-const getRecords=()=>readJSON(RECORD_KEY,[]),getSurveys=()=>readJSON(SURVEY_KEY,[]);
-const setNickname=name=>{profile.nickname=(String(name||'').trim().slice(0,5)||'無名貓奴');writeJSON(PROFILE_KEY,profile);$('#gameTitle').textContent='✦ '+profile.nickname+' ✦';};
+const uid=()=>crypto.randomUUID?crypto.randomUUID():Date.now()+'_'+Math.random().toString(36).slice(2);
+const clip=(s,n)=>Array.from(String(s||'')).slice(0,n).join('');          // 依「字」計算長度（emoji 不會被切壞）
+let profile=readJSON(PROFILE_KEY,null);
+if(!profile||!profile.id)profile={id:'p_'+uid(),nickname:DEFAULT_NAME,nicknameSet:false};
+profile.nickname=clip(profile.nickname,5)||DEFAULT_NAME;
+if(typeof profile.nicknameSet==='undefined')profile.nicknameSet=profile.nickname!==DEFAULT_NAME;
+if(!profile.stats){   // 累計統計：場數、總時間、成就收藏（舊版若有本機紀錄就一併接過來）
+  const old=readJSON(RECORD_KEY,[]).filter(x=>x&&x.playerId===profile.id);
+  profile.stats={games:old.length,totalTime:old.reduce((a,x)=>a+(x.time||0),0),achs:[...new Set(old.flatMap(x=>x.achievements||[]))]};
+}
+writeJSON(PROFILE_KEY,profile);
+let currentGameId='',lastRec=null,bestAtStart=0,rankMode='score',boardData=null,boardTok=0,surveyDoneMem=false;
+const setNickname=name=>{profile.nickname=clip(String(name||'').replace(/[<>&"'`\\]/g,'').trim(),5)||DEFAULT_NAME;writeJSON(PROFILE_KEY,profile);$('#gameTitle').textContent='✦ '+profile.nickname+' ✦';};
 const safeText=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-function saveLocalRun(){const rec={gameId:currentGameId||('g_'+Date.now()),playerId:profile.id,nickname:profile.nickname,score:Number(score)||0,combo:Number(maxCombo)||0,time:Math.floor(elapsed)||0,achievements:[...runAchievements],endedAt:Date.now()};const all=getRecords();if(!all.some(x=>x.gameId===rec.gameId)){all.push(rec);writeJSON(RECORD_KEY,all);}return rec;}
-function playerStats(){const rows=getRecords().filter(x=>x.playerId===profile.id);return {rows,bestScore:Math.max(0,...rows.map(x=>x.score||0)),bestCombo:Math.max(0,...rows.map(x=>x.combo||0)),bestTime:Math.max(0,...rows.map(x=>x.time||0)),games:rows.length,totalTime:rows.reduce((a,x)=>a+(x.time||0),0),achievements:[...new Set(rows.flatMap(x=>x.achievements||[]))]};}
+
+async function apiFetch(url,opt){
+  const ctl=new AbortController(),t=setTimeout(()=>ctl.abort(),12000);
+  try{const r=await fetch(url,{...opt,signal:ctl.signal});if(!r.ok)throw new Error('http '+r.status);return await r.json();}
+  finally{clearTimeout(t);}
+}
+const apiPost=body=>BACKEND_URL?apiFetch(BACKEND_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(body)}):Promise.reject(new Error('no backend'));
+const apiGet=params=>BACKEND_URL?apiFetch(BACKEND_URL+'?'+new URLSearchParams(params)):Promise.reject(new Error('no backend'));
+
+/* ----- 成績上傳：先放進待傳清單，成功才移除；失敗會在下次連線 / 回到遊戲時自動補傳 ----- */
+const upState=new Map();   // gameId -> 'pending' | 'ok' | 'fail'
+const UP_TEXT={pending:'🛸成績上傳中…',ok:'🚀成績已上傳',fail:'💨上傳失敗 下次連線會自動補傳'};
+const getQueue=()=>{const q=readJSON(QUEUE_KEY,[]);return Array.isArray(q)?q:[];};
+const setQueue=q=>writeJSON(QUEUE_KEY,q.slice(-30));
+function refreshUpStatus(){const el=$('#upStatus');if(el)el.textContent=UP_TEXT[upState.get(el.dataset.gid)]||'';}
+let flushing=null;
+function flushQueue(){
+  if(flushing)return flushing;
+  flushing=(async()=>{
+    {
+      for(;;){
+        const q=getQueue();if(!q.length)break;
+        const it=q[0];let ok=false;
+        try{const r=await apiPost({action:'score',pid:profile.id,name:profile.nickname,score:it.score,combo:it.combo,time:it.time});ok=!!(r&&r.ok);}catch(e){}
+        if(!ok){getQueue().forEach(x=>upState.set(x.gameId,'fail'));refreshUpStatus();break;}
+        setQueue(getQueue().filter(x=>x.gameId!==it.gameId));upState.set(it.gameId,'ok');refreshUpStatus();
+      }
+    }
+  })().finally(()=>{flushing=null;});   // 注意：要在指定給 flushing 之後才清掉，所以用 finally 回呼
+  return flushing;
+}
+function enqueue(item){const q=getQueue();q.push(item);setQueue(q);upState.set(item.gameId,'pending');flushQueue();}
+
+/* ----- 一局結束 / 中途離開：記錄累計統計並排入上傳 ----- */
+function recordRun(force){
+  if(lastRec&&lastRec.gameId===currentGameId)return lastRec;
+  const sc=Number(score)||0, tm=Math.floor(elapsed)||0;
+  if(!force&&sc<=0&&tm<3)return null;
+  const rec={gameId:currentGameId,score:sc,combo:Number(maxCombo)||0,time:tm,achievements:[...runAchievements],newBest:sc>0&&sc>bestAtStart};
+  const st=profile.stats;st.games++;st.totalTime+=tm;
+  for(const a of rec.achievements)if(!st.achs.includes(a))st.achs.push(a);
+  writeJSON(PROFILE_KEY,profile);
+  lastRec=rec;
+  enqueue({gameId:rec.gameId,score:rec.score,combo:rec.combo,time:rec.time});
+  return rec;
+}
+function playerStats(){const st=profile.stats;return {bestScore:best,bestCombo:bestCombo,bestTime:Math.floor(bestTime),games:st.games,totalTime:st.totalTime,achievements:st.achs};}
 function titleFor(stats){const defs=[['我命由我不由天',7000],['外掛本掛',5500],['神級貓奴',4000],['預判大師',2500],['捕獵型人格',1000]];for(const [n,v] of defs)if(stats.bestScore>=v)return '💩'+n;return '💩新手貓奴';}
-function showNicknameModal(){if(profile.nicknameSet){showScreen('game');chooseCharacterModal();return;}showScreen('game');const nick=safeText(profile.nickname||'');showModal(`<h1>暱稱</h1><div class="profile-input-row"><label for="nicknameInput">暱稱</label><input id="nicknameInput" class="profile-input" maxlength="5" value="${nick}" placeholder="取個響亮的名字"></div><p class="small-note">只收集暱稱與成績，用於排行榜與改善遊戲</p><div class="row"><button class="modalBtn" id="nickContinue">繼續</button><button class="modalBtn secondary" id="nickBack">返回首頁</button></div>`);$('#nickContinue').onclick=()=>{setNickname($('#nicknameInput').value);profile.nicknameSet=true;writeJSON(PROFILE_KEY,profile);chooseCharacterModal();};$('#nickBack').onclick=goHome;}
+
+/* ----- 暱稱 / 角色 ----- */
+function bindNickInput(){
+  const el=$('#nicknameInput');if(!el)return;
+  el.addEventListener('input',e=>{if(e.isComposing)return;const v=clip(el.value,5);if(v!==el.value)el.value=v;});
+  el.addEventListener('compositionend',()=>{el.value=clip(el.value,5);});
+}
+const nickValue=()=>profile.nickname===DEFAULT_NAME?'':safeText(profile.nickname);
+function showNicknameModal(){
+  if(profile.nicknameSet){chooseCharacterModal();return;}
+  showModal(`<h1>暱稱</h1><div class="profile-input-row"><label for="nicknameInput">暱稱</label><input id="nicknameInput" class="profile-input" value="${nickValue()}" placeholder="取個響亮的名字" autocomplete="off"></div><p class="small-note">只收集暱稱與成績 用於排行榜與改善遊戲</p><div class="row"><button class="modalBtn" id="nickContinue">繼續</button><button class="modalBtn secondary" id="nickBack">返回首頁</button></div>`);
+  bindNickInput();
+  $('#nickContinue').onclick=()=>{setNickname($('#nicknameInput').value);profile.nicknameSet=true;writeJSON(PROFILE_KEY,profile);chooseCharacterModal();};
+  $('#nickBack').onclick=goHome;
+}
 function chooseCharacterModal(){showModal(`<h1>${safeText(profile.nickname)}大魔王</h1><p>今天想玩哪個角色？</p><div class="row"><button class="modalBtn" id="chooseMan">帥哥</button><button class="modalBtn" id="chooseWoman">美女</button></div><button class="modalBtn secondary" id="chooseBack">返回首頁</button>`);$('#chooseMan').onclick=()=>beginCharacter('man');$('#chooseWoman').onclick=()=>beginCharacter('woman');$('#chooseBack').onclick=goHome;}
-function openReport(){const st=playerStats();showScreen('game');showModal(`<h1 class="report-title">👽${safeText(profile.nickname)}的成績單</h1><div class="report-rank-title">${titleFor(st)}</div><div class="panel-list"><div class="panel-row">🎖️最高分數：${st.bestScore}</div><div class="panel-row">🥊最高連擊：${st.bestCombo}</div><div class="panel-row">⏱️最長時間：${formatGameTime(st.bestTime)}</div><div class="panel-row">💾累計場數：${st.games}場</div><div class="panel-row">💾累計遊玩：${formatGameTime(st.totalTime)}</div><div class="panel-row">💾成就收藏：${st.achievements.length}/25</div></div><div class="row"><button class="modalBtn" id="reportAch">看成就收藏</button><button class="modalBtn secondary" id="editNick">修改暱稱</button><button class="modalBtn secondary" id="reportHome">返回首頁</button></div>`);$('#reportAch').onclick=openAchievements;$('#editNick').onclick=showNicknameModalForEdit;$('#reportHome').onclick=goHome;}
-function showNicknameModalForEdit(){showModal(`<h1>修改暱稱</h1><div class="profile-input-row"><label for="nicknameInput">暱稱</label><input id="nicknameInput" class="profile-input" maxlength="5" value="${safeText(profile.nickname)}" placeholder="取個響亮的名字"></div><p class="small-note">修改暱稱不會改變你的玩家 ID 或個人成績。</p><div class="row"><button class="modalBtn" id="nickSave">儲存</button><button class="modalBtn secondary" id="nickCancel">取消</button></div>`);$('#nickSave').onclick=()=>{setNickname($('#nicknameInput').value);openReport();};$('#nickCancel').onclick=openReport;}
-function openAchievements(){const unlocked=playerStats().achievements;const html=achievementDefs.map(a=>unlocked.includes(a.name)?`<div class="panel-row">🏆${safeText(a.name)}</div>`:`<div class="panel-row">🔒❔❔❔❔❔</div>`).join('');showModal(`<h1>🏆成就收藏</h1><p>${unlocked.length}/25</p><div class="panel-list">${html}</div><button class="modalBtn secondary" id="achBack">返回成績單</button>`);$('#achBack').onclick=openReport;}
-function openLeaderboard(mode='score'){rankMode=mode;const rows=getRecords();const metric={score:x=>x.score||0,combo:x=>x.combo||0,time:x=>x.time||0}[mode];const sorted=[...rows].sort((a,b)=>metric(b)-metric(a)||(a.endedAt||0)-(b.endedAt||0));const bestByPlayer=new Map();for(const r of sorted){if(!bestByPlayer.has(r.playerId))bestByPlayer.set(r.playerId,r);}const list=[...bestByPlayer.values()].sort((a,b)=>metric(b)-metric(a)||(a.endedAt||0)-(b.endedAt||0));const mine=list.findIndex(x=>x.playerId===profile.id);const tabs=`<div class="tab-row"><button class="tab-btn ${mode==='score'?'active':''}" id="tabScore">🎖️分數</button><button class="tab-btn ${mode==='combo'?'active':''}" id="tabCombo">🥊連擊</button><button class="tab-btn ${mode==='time'?'active':''}" id="tabTime">⏱️時間</button></div>`;let body=list.length?list.slice(0,50).map((r,i)=>`<div class="panel-row"><span class="rank-number">${i===0?'🥇':i===1?'🥈':i===2?'🥉':i+1}</span> ${safeText(r.nickname)}　<strong>${mode==='time'?formatClock(r.time):metric(r)}</strong><small>${mode==='time'?'單場存活時間':mode==='combo'?'最高連擊':'最高分'}</small></div>`).join(''):`<div class="panel-row">還沒有人上榜快來搶頭香🤡</div>`;showScreen('game');showModal(`<h1>🏆排行榜</h1>${tabs}<div class="panel-list">${body}</div><p>👽你的名次：${mine<0?'尚未上榜':'第'+(mine+1)+'名'}</p><div class="row"><button class="modalBtn" id="rankRefresh">重新整理</button><button class="modalBtn secondary" id="rankHome">返回首頁</button></div>`);$('#tabScore').onclick=()=>openLeaderboard('score');$('#tabCombo').onclick=()=>openLeaderboard('combo');$('#tabTime').onclick=()=>openLeaderboard('time');$('#rankRefresh').onclick=()=>openLeaderboard(mode);$('#rankHome').onclick=goHome;}
-function openSurvey(rec){const already=getSurveys().some(x=>x.gameId===rec.gameId&&x.playerId===profile.id);if(already){showModal(`<h1>💌已回饋</h1><p>這場遊戲已經提交過問卷囉😻</p><button class="modalBtn secondary" id="surveyBack">返回</button>`);$('#surveyBack').onclick=()=>showGameOver(rec);return;}let fun='',difficulty='';showModal(`<h1 class="survey-title">🎮MAIMINE STUDIO🎮</h1><p>歡迎給小麥一點鼓勵跟建議🙌🏻</p><label class="field-label">1.好玩程度</label><div class="survey-select" id="funOptions">${['😫','😐','🙂','😆','🤩'].map(x=>`<button class="survey-option" data-v="${x}">${x}</button>`).join('')}</div><label class="field-label">2.難易度</label><div class="survey-select" id="diffOptions">${['😴太簡單','👌剛剛好','😵有點難','💀太難了'].map(x=>`<button class="survey-option" data-v="${x}">${x}</button>`).join('')}</div><label class="field-label" for="surveyText">3.想說的話（選填）</label><textarea id="surveyText" class="survey-text" placeholder="有什麼感想或idea或bug都可以跟我說😻"></textarea><p class="small-note">只收集暱稱與成績用於排行榜與改善遊戲</p><div class="row"><button class="modalBtn" id="surveySubmit">送出</button><button class="modalBtn secondary" id="surveySkip">先不要</button></div>`);const bind=(id,cb)=>{document.querySelectorAll('#'+id+' .survey-option').forEach(b=>b.onclick=()=>{document.querySelectorAll('#'+id+' .survey-option').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');cb(b.dataset.v);});};bind('funOptions',x=>fun=x);bind('diffOptions',x=>difficulty=x);$('#surveySubmit').onclick=()=>{if(!fun||!difficulty){showModal('<h1>還差一點點😼</h1><p>請選擇好玩程度與難易度</p><button class="modalBtn secondary" id="surveyRetry">返回問卷</button>');$('#surveyRetry').onclick=()=>openSurvey(rec);return;}const surveys=getSurveys();surveys.push({surveyId:'s_'+Date.now(),playerId:profile.id,nickname:profile.nickname,gameId:rec.gameId,fun,difficulty,comment:$('#surveyText').value.trim(),submittedAt:Date.now()});writeJSON(SURVEY_KEY,surveys);showModal('<h1>👾謝謝你的回饋</h1><button class="modalBtn secondary" id="surveyDone">返回</button>');$('#surveyDone').onclick=()=>showGameOver(rec);};$('#surveySkip').onclick=()=>showGameOver(rec);}
-function showGameOver(rec){const head=achHTML(rec.achievements||[]);const already=getSurveys().some(x=>x.gameId===rec.gameId&&x.playerId===profile.id);showModal(`${head}<p>你的分數：<strong>${rec.score}</strong><br>最高分數：<strong>${best}</strong><br>本局最高連擊：<strong>${rec.combo}</strong><br>本局遊玩時間：<strong>${formatGameTime(rec.time)}</strong></p><div class="row"><button class="modalBtn" id="retry">再玩一次</button><button class="modalBtn secondary" id="surveyButton">${already?'💌已回饋':'📝給點意見'}</button><button class="modalBtn secondary" id="endHome">返回首頁</button></div>`);$('#retry').onclick=()=>{hideModal();startGame();};$('#surveyButton').onclick=()=>already?openSurvey(rec):openSurvey(rec);$('#endHome').onclick=goHome;}
+
+/* ----- 成績單 / 成就收藏 ----- */
+function openReport(){
+  const st=playerStats();
+  showModal(`<h1 class="report-title">👽${safeText(profile.nickname)}的成績單</h1><div class="report-rank-title">${titleFor(st)}</div><div class="panel-list"><div class="panel-row">🎖️最高分數：${st.bestScore}</div><div class="panel-row">🥊最高連擊：${st.bestCombo}</div><div class="panel-row">⏱️最長時間：${formatGameTime(st.bestTime)}</div><div class="panel-row">💾累計場數：${st.games} 場</div><div class="panel-row">💾累計遊玩：${formatGameTime(st.totalTime)}</div><div class="panel-row">💾成就收藏：${st.achievements.length} / ${achievementDefs.length}</div></div><div class="row"><button class="modalBtn" id="reportAch">看成就收藏</button><button class="modalBtn secondary" id="editNick">修改暱稱</button><button class="modalBtn secondary" id="reportHome">返回首頁</button></div>`);
+  $('#reportAch').onclick=openAchievements;$('#editNick').onclick=showNicknameModalForEdit;$('#reportHome').onclick=goHome;
+}
+function showNicknameModalForEdit(){
+  showModal(`<h1>修改暱稱</h1><div class="profile-input-row"><label for="nicknameInput">暱稱</label><input id="nicknameInput" class="profile-input" value="${nickValue()}" placeholder="取個響亮的名字" autocomplete="off"></div><p class="small-note">修改暱稱不會改變你的個人成績</p><div class="row"><button class="modalBtn" id="nickSave">儲存</button><button class="modalBtn secondary" id="nickCancel">取消</button></div>`);
+  bindNickInput();
+  $('#nickSave').onclick=()=>{setNickname($('#nicknameInput').value);flushQueue();openReport();};$('#nickCancel').onclick=openReport;
+}
+function openAchievements(){
+  const unlocked=playerStats().achievements;
+  const html=achievementDefs.map(a=>unlocked.includes(a.name)?`<div class="panel-row">🏆${safeText(a.name)}</div>`:`<div class="panel-row">🔒❔❔❔❔❔</div>`).join('');
+  showModal(`<h1>🏆成就收藏</h1><p>${unlocked.length} / ${achievementDefs.length}</p><div class="panel-list">${html}</div><button class="modalBtn secondary" id="achBack">返回成績單</button>`);
+  $('#achBack').onclick=openReport;
+}
+
+/* ----- 排行榜（資料來自 Google 試算表） ----- */
+const bindBoardBtns=()=>{const r=$('#rankRefresh');if(r)r.onclick=()=>loadBoard(rankMode);const h=$('#rankHome');if(h)h.onclick=goHome;};
+async function loadBoard(mode){
+  const tok=++boardTok;rankMode=mode;
+  showModal(`<h1>🏆排行榜</h1><p>載入中…😼</p><button class="modalBtn secondary" id="rankHome">返回首頁</button>`);bindBoardBtns();
+  try{
+    if(getQueue().length)await Promise.race([flushQueue(),sleep(4000)]);   // 先把還沒傳的成績補傳，名次才準
+    const d=await apiGet({action:'board',pid:profile.id});
+    if(!d||!d.ok)throw new Error('bad');
+    if(tok!==boardTok)return;
+    boardData=d;renderBoard();
+  }catch(e){
+    if(tok!==boardTok)return;
+    showModal(`<h1>🏆排行榜</h1><p>連不上排行榜😿 請稍後再試</p><div class="row"><button class="modalBtn" id="rankRefresh">重新整理</button><button class="modalBtn secondary" id="rankHome">返回首頁</button></div>`);bindBoardBtns();
+  }
+}
+const openLeaderboard=mode=>loadBoard(mode||'score');
+function renderBoard(){
+  const d=boardData,mode=rankMode,list=Array.isArray(d[mode])?d[mode]:[];
+  const fmt=v=>mode==='time'?formatClock(v):v;
+  const tabs=`<div class="tab-row"><button class="tab-btn ${mode==='score'?'active':''}" id="tabScore">🎖️分數</button><button class="tab-btn ${mode==='combo'?'active':''}" id="tabCombo">🥊連擊</button><button class="tab-btn ${mode==='time'?'active':''}" id="tabTime">⏱️時間</button></div>`;
+  const rows=list.length?list.map((r,i)=>`<div class="panel-row lb${r.mine?' mine':''}"><span class="rank-number">${i===0?'🥇':i===1?'🥈':i===2?'🥉':i+1}</span><span class="nm">${safeText(r.name)}</span><strong>${fmt(r.v)}</strong></div>`).join(''):`<div class="panel-row">還沒有人上榜 快來搶頭香🤡</div>`;
+  const rk=d.me&&d.me[mode]&&d.me[mode].rank;
+  showModal(`<h1>🏆排行榜</h1>${tabs}<div class="panel-list">${rows}</div><p>👽你的名次：${rk?`第 ${rk} 名`:'尚未上榜'}</p><div class="row"><button class="modalBtn" id="rankRefresh">重新整理</button><button class="modalBtn secondary" id="rankHome">返回首頁</button></div>`);
+  const tab=(id,m)=>{$(id).onclick=()=>{rankMode=m;renderBoard();};};tab('#tabScore','score');tab('#tabCombo','combo');tab('#tabTime','time');bindBoardBtns();
+}
+
+/* ----- 玩後小問卷（每個公告版本只能填一次） ----- */
+const surveyDone=()=>{if(surveyDoneMem)return true;try{return localStorage.getItem(SURVEY_DONE_KEY)===ANN.ver;}catch(e){return false;}};
+const markSurveyDone=()=>{surveyDoneMem=true;try{localStorage.setItem(SURVEY_DONE_KEY,ANN.ver);}catch(e){}};
+function openSurvey(rec){
+  if(surveyDone()){showGameOver(rec);return;}
+  let fun=0,diff=0,sending=false,closed=false;const sid='sv_'+uid();
+  showModal(`<h1 class="survey-title">🎮MAIMINE STUDIO🎮</h1><p>歡迎給小麥一點鼓勵跟建議🙌🏻</p><label class="field-label">1.好玩程度</label><div class="fun-row" id="funOptions">${[['😫',1],['😐',2],['🙂',3],['😆',4],['🤩',5]].map(([e,n])=>`<button class="fun-tile" data-v="${n}"><span class="fe">${e}</span><span class="fn">${n}</span></button>`).join('')}</div><label class="field-label">2.難易度</label><div class="diff-row" id="diffOptions">${['😴太簡單','👌剛剛好','😵有點難','💀太難了'].map((t,i)=>`<button class="survey-option" data-v="${i+1}">${t}</button>`).join('')}</div><label class="field-label" for="surveyText">3.想說的話（選填）</label><textarea id="surveyText" class="survey-text" maxlength="200" placeholder="有什麼感想或idea或bug都可以跟我說😻"></textarea><p class="small-note">只收集暱稱與成績 用於排行榜與改善遊戲</p><p class="survey-msg" id="surveyMsg"></p><div class="row"><button class="modalBtn" id="surveySubmit">送出</button><button class="modalBtn secondary" id="surveySkip">先不要</button></div>`);
+  const msg=t=>{const m=$('#surveyMsg');if(m)m.textContent=t;};
+  const bind=(id,sel,cb)=>{document.querySelectorAll('#'+id+' '+sel).forEach(b=>b.onclick=()=>{document.querySelectorAll('#'+id+' '+sel).forEach(x=>x.classList.remove('selected'));b.classList.add('selected');cb(Number(b.dataset.v));msg('');});};
+  bind('funOptions','.fun-tile',v=>fun=v);bind('diffOptions','.survey-option',v=>diff=v);
+  $('#surveySkip').onclick=()=>{closed=true;showGameOver(rec);};
+  $('#surveySubmit').onclick=async()=>{
+    if(sending)return;
+    if(!fun||!diff){msg('還差一點點😼 請選好玩程度與難易度');return;}
+    sending=true;const btn=$('#surveySubmit');btn.disabled=true;btn.textContent='送出中…';msg('');
+    try{
+      const r=await apiPost({action:'survey',sid,pid:profile.id,name:profile.nickname,fun,diff,text:$('#surveyText').value.trim(),score:rec.score});
+      if(!r||!r.ok)throw new Error('bad');
+      markSurveyDone();if(closed)return;
+      showModal('<h1>👾謝謝你的回饋</h1><button class="modalBtn secondary" id="surveyDone">返回</button>');$('#surveyDone').onclick=()=>showGameOver(rec);
+    }catch(e){
+      if(closed)return;
+      sending=false;btn.disabled=false;btn.textContent='送出';msg('送出失敗😿 請稍後再試');
+    }
+  };
+}
+
+/* ----- 遊戲結束畫面 ----- */
+function showGameOver(rec){
+  const head=achHTML(rec.achievements||[]),done=surveyDone();
+  showModal(`${head}<p>你的分數：<strong>${rec.score}</strong><br>最高分數：<strong>${best}</strong><br>本局最高連擊：<strong>${rec.combo}</strong><br>本局遊玩時間：<strong>${formatGameTime(rec.time)}</strong></p>${rec.newBest?'<p class="newbest">🌟新的個人最高分！</p>':''}<p class="up" id="upStatus" data-gid="${rec.gameId}"></p><div class="row"><button class="modalBtn" id="retry">再玩一次</button><button class="modalBtn secondary" id="surveyButton"${done?' disabled':''}>${done?'💌已回饋':'📝給點意見'}</button><button class="modalBtn secondary" id="endHome">返回首頁</button></div>`);
+  refreshUpStatus();
+  $('#retry').onclick=()=>{hideModal();startGame();};
+  $('#surveyButton').onclick=()=>{if(!surveyDone())openSurvey(rec);};
+  $('#endHome').onclick=goHome;
+}
 
 
 /* ========== 圖片：載入時自動縮小，大幅降低手機記憶體與解碼負擔 ========== */
@@ -323,7 +483,7 @@ function setGuard(on){
 function showScreen(which){home.classList.toggle('active',which==='home');gameScreen.classList.toggle('active',which==='game');if(which!=='home')annCard.hidden=true;}
 function showModal(html){modal.innerHTML=html;overlay.hidden=false;}
 function hideModal(){overlay.hidden=true;}
-function goHome(){hideModal();showScreen('home');}
+function goHome(){boardTok++;hideModal();showScreen('home');}
 function homeModal(){openReport();}
 function chooseModal(){showNicknameModal();}
 async function beginCharacter(kind){
@@ -353,7 +513,7 @@ function cleanObjects(){objects.forEach(o=>releaseElement(o.el));objects=[];}
 
 /* ========== 遊戲流程 ========== */
 function startGame(){
-  currentGameId='g_'+(crypto.randomUUID?crypto.randomUUID():Date.now()+'_'+Math.random().toString(36).slice(2));
+  currentGameId='g_'+uid();bestAtStart=best;lastRec=null;
   cancelAnimationFrame(raf);cleanObjects();gameOverPending=false;startMusic();
   score=0;elapsed=0;gameTimerEl.textContent='⏱00:00';$('#gameTitle').textContent='✦ '+profile.nickname+' ✦';spawnTimer=0;comboTimer=stormTimer=poopRainTimer=0;
   specialSpawnTimer=8+Math.random()*5;lastSpecialSrc='';poopDodged=0;specialCount=0;runAchievements=[];unlockedThisRun=new Set();
@@ -371,7 +531,7 @@ function achHTML(list){
 function finishGame(){
   if(!running&&!gameOverPending)return;
   gameOverPending=false;running=false;cancelAnimationFrame(raf);stopMusic();saveBest();noticeClear();pauseBtn.hidden=true;comboEl.hidden=true;setAura(false);setGuard(false);livesEl.hidden=true;
-  const rec=saveLocalRun();
+  const rec=recordRun(true);
   showGameOver(rec);
 }
 function pauseGame(){
@@ -583,11 +743,10 @@ gameScreen.addEventListener('touchmove',e=>{if(running)e.preventDefault();},{pas
 gameScreen.addEventListener('pointerdown',e=>{if(!running||paused)return;pointer(e);});
 gameScreen.addEventListener('pointermove',e=>{if(!running||paused)return;if(e.buttons||e.pointerType==='touch')pointer(e);});
 $('#homeStart').onclick=chooseModal;
-// 首頁沒有 homeBest 元素；移除錯誤綁定，避免初始化中斷。
 $('#homeReport').onclick=openReport;
-$('#homeRank').onclick=()=>openLeaderboard('score');
+$('#homeRank').onclick=()=>loadBoard('score');
 pauseBtn.onclick=pauseGame;
-$('#backHome').onclick=()=>{running=false;gameOverPending=false;cancelAnimationFrame(raf);stopMusic();saveBest();noticeClear();hideModal();pauseBtn.hidden=true;comboEl.hidden=true;setAura(false);setGuard(false);livesEl.hidden=true;showScreen('home');};
+$('#backHome').onclick=()=>{if(running||gameOverPending)recordRun(false);boardTok++;running=false;gameOverPending=false;cancelAnimationFrame(raf);stopMusic();saveBest();noticeClear();hideModal();pauseBtn.hidden=true;comboEl.hidden=true;setAura(false);setGuard(false);livesEl.hidden=true;showScreen('home');};
 musicBtn.onclick=()=>{musicEnabled=!musicEnabled;if(musicEnabled&&running&&!paused)startMusic();else stopMusic();updateAudioButtons();};
 soundBtn.onclick=()=>{
   soundEnabled=!soundEnabled;
@@ -606,7 +765,7 @@ document.addEventListener('click',e=>{
   if(b&&b!==musicBtn&&b!==soundBtn&&Date.now()-lastButtonPointerSound>700)playClick();
 },true);
 // 切到背景 / 離開頁面：自動暫停並存檔
-document.addEventListener('visibilitychange',()=>{if(!document.hidden)resumeCtx();if(document.hidden){saveBest();if(running&&!paused)pauseGame();}});
+document.addEventListener('visibilitychange',()=>{if(!document.hidden){resumeCtx();flushQueue();}if(document.hidden){saveBest();if(running&&!paused)pauseGame();}});
 window.addEventListener('pagehide',saveBest);
 window.addEventListener('resize',()=>{updateMetrics();setPlayer(px);});
 player.addEventListener('load',updateMetrics);
@@ -626,6 +785,7 @@ $('#annClose').onclick=annHide;
   if(seen!==ANN.ver)setTimeout(()=>{if(home.classList.contains('active')){annShow();try{localStorage.setItem(ANN_KEY,ANN.ver);}catch(e){}}},500);
 })();
 updateAudioButtons();setPlayer(.5);
+window.addEventListener('online',flushQueue);flushQueue();   // 開啟遊戲時，順便補傳上次沒傳成功的成績
 })();
 </script>
 </body>
