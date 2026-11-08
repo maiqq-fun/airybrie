@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#000000">
 <link rel="apple-touch-icon" href="./images/shit3.png">
 <meta name="apple-mobile-web-app-title" content="艾里布里">
-<title>艾里布里</title>
+<title>MAIMINE GAME</title>
 <style>
 :root{--ink:#392719;--cream:#fff3d7;--orange:#f3a43b;--yellow:#ffd66b;--brown:#6c4328;--shadow:0 7px 0 #6a452a55}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -63,7 +63,8 @@ button{font:inherit;cursor:pointer;color:inherit}
 .modalBtn{border:2.5px solid var(--ink);border-radius:18px;background:var(--orange);padding:11px 18px;font-size:18px;font-weight:1000;box-shadow:3px 4px 0 var(--ink);margin:5px;min-width:112px;transition:transform .12s,filter .12s}.modalBtn:active{transform:translate(2px,3px);box-shadow:1px 1px 0 var(--ink);filter:brightness(1.05)}.modalBtn.secondary{background:#f7dfaa}.row{display:flex;justify-content:center;flex-wrap:wrap;gap:8px}
 #backHome{position:absolute;z-index:8;left:12px;top:calc(env(safe-area-inset-top) + 62px);border:2px solid var(--ink);border-radius:999px;background:#fff0d3;padding:7px 12px;font-weight:900;box-shadow:2px 3px 0 #6b452833}
 @media (min-width:700px){#home{background-size:contain;background-color:#000000}#gameScreen{max-width:520px;left:50%;transform:translateX(-50%);width:100%;border-left:2px solid #5b3b2555;border-right:2px solid #5b3b2555}}
-</style>
+
+.profile-input-row{display:flex;align-items:center;justify-content:center;gap:8px;margin:12px 0 16px;font-weight:1000;font-size:18px}.profile-input-row label{white-space:nowrap}.profile-input{width:130px;min-width:0;border:2px solid var(--ink);border-radius:12px;padding:9px 10px;background:#fffdf4;color:var(--ink);font:inherit;font-weight:900;text-align:center}.small-note{font-size:12px!important;opacity:.72;margin:10px 0!important}.panel-list{display:flex;flex-direction:column;gap:8px;text-align:left;margin:12px 0}.panel-row{border:2px solid #6c4328;border-radius:14px;background:#fff8e8;padding:9px 11px;font-weight:900;line-height:1.45}.panel-row small{display:block;font-size:12px;opacity:.7}.tab-row{display:flex;justify-content:center;gap:5px;flex-wrap:wrap;margin:10px 0}.tab-btn{border:2px solid var(--ink);border-radius:999px;background:#f7dfaa;padding:7px 11px;font-weight:1000}.tab-btn.active{background:var(--orange)}.field-label{display:block;text-align:left;font-weight:1000;margin:12px 0 5px}.survey-select{display:flex;gap:5px;flex-wrap:wrap;justify-content:center}.survey-option{border:2px solid var(--ink);border-radius:14px;background:#fff8e8;padding:8px 10px;font-weight:900}.survey-option.selected{background:#ffd66b;box-shadow:2px 3px 0 var(--ink)}.survey-text{width:100%;min-height:76px;border:2px solid var(--ink);border-radius:12px;padding:10px;background:#fffdf4;color:var(--ink);font:inherit;resize:vertical}.rank-number{display:inline-block;min-width:26px;font-weight:1000}.</style>
 </head>
 <body>
 <div id="app">
@@ -74,11 +75,11 @@ button{font:inherit;cursor:pointer;color:inherit}
       <div class="ann-body" id="annBody"></div>
       <div class="ann-time" id="annTime"></div>
     </div>
-    <div class="home-menu"><button id="homeStart" class="home-text-btn">🎮開始遊戲🎮</button><button id="homeBest" class="home-text-btn">🥇最高紀錄🥇</button></div>
+    <div class="home-menu"><button id="homeStart" class="home-text-btn">🎮開始遊戲🎮</button><button id="homeReport" class="home-text-btn">📝我的成績單📝</button><button id="homeRank" class="home-text-btn">🏆排行榜🏆</button></div>
   </section>
   <section id="gameScreen" class="screen" aria-label="遊戲畫面">
     <img id="gameBg" src="./images/manbg.png" alt="遊戲背景"><div id="dim"></div>
-    <div id="topbar"><div class="pill">分數 <span id="score">0</span></div><div id="gameTitle">✦ 艾里布里 ✦</div><div class="pill">最高 <span id="best">0</span></div></div>
+    <div id="topbar"><div class="pill">分數 <span id="score">0</span></div><div id="gameTitle">✦ 無名貓奴 ✦</div><div class="pill">最高 <span id="best">0</span></div></div>
     <div id="gameTimer">⏱00:00</div>
     <button id="backHome">👾首頁</button><button id="pauseBtn" aria-label="暫停">Ⅱ</button>
     <div id="audioControls"><button id="musicBtn" class="audioBtn" aria-label="切換背景音樂">🎵音樂：開</button><button id="soundBtn" class="audioBtn" aria-label="切換遊戲音效">🔊音效：開</button></div>
@@ -97,29 +98,26 @@ const gameTimerEl=$('#gameTimer');
 const annBtn=$('#annBtn'), annCard=$('#annCard');
 function formatClock(seconds){const total=Math.max(0,Math.floor(seconds));return `${String(Math.floor(total/60)).padStart(2,'0')}:${String(total%60).padStart(2,'0')}`;}
 function formatGameTime(seconds){const total=Math.max(0,Math.floor(seconds)),minutes=Math.floor(total/60),secs=total%60;return minutes>0?`${minutes} 分 ${secs} 秒`:`${secs} 秒`;}
+const PROFILE_KEY='maimine-player-profile-v1', RECORD_KEY='maimine-local-game-records-v1', SURVEY_KEY='maimine-local-surveys-v1';
+const readJSON=(key,fallback)=>{try{return JSON.parse(localStorage.getItem(key)||'null')??fallback;}catch(e){return fallback;}};
+const writeJSON=(key,value)=>{try{localStorage.setItem(key,JSON.stringify(value));return true;}catch(e){return false;}};
+let profile=readJSON(PROFILE_KEY,null);if(!profile||!profile.id){profile={id:'p_'+(crypto.randomUUID?crypto.randomUUID():Date.now()+'_'+Math.random().toString(36).slice(2)),nickname:'無名貓奴',nicknameSet:false};writeJSON(PROFILE_KEY,profile);}if(typeof profile.nicknameSet==='undefined')profile.nicknameSet=profile.nickname!=='無名貓奴';
+let currentGameId='',currentSurveySubmitted=false,rankMode='score';
+const getRecords=()=>readJSON(RECORD_KEY,[]),getSurveys=()=>readJSON(SURVEY_KEY,[]);
+const setNickname=name=>{profile.nickname=(String(name||'').trim().slice(0,5)||'無名貓奴');writeJSON(PROFILE_KEY,profile);$('#gameTitle').textContent='✦ '+profile.nickname+' ✦';};
+const safeText=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function saveLocalRun(){const rec={gameId:currentGameId||('g_'+Date.now()),playerId:profile.id,nickname:profile.nickname,score:Number(score)||0,combo:Number(maxCombo)||0,time:Math.floor(elapsed)||0,achievements:[...runAchievements],endedAt:Date.now()};const all=getRecords();if(!all.some(x=>x.gameId===rec.gameId)){all.push(rec);writeJSON(RECORD_KEY,all);}return rec;}
+function playerStats(){const rows=getRecords().filter(x=>x.playerId===profile.id);return {rows,bestScore:Math.max(0,...rows.map(x=>x.score||0)),bestCombo:Math.max(0,...rows.map(x=>x.combo||0)),bestTime:Math.max(0,...rows.map(x=>x.time||0)),games:rows.length,totalTime:rows.reduce((a,x)=>a+(x.time||0),0),achievements:[...new Set(rows.flatMap(x=>x.achievements||[]))]};}
+function titleFor(stats){const defs=[['我命由我不由天',7000],['外掛本掛',5500],['神級貓奴',4000],['預判大師',2500],['捕獵型人格',1000]];for(const [n,v] of defs)if(stats.bestScore>=v)return '💩'+n;return '🐣新手貓奴';}
+function showNicknameModal(){if(profile.nicknameSet){showScreen('game');chooseCharacterModal();return;}showScreen('game');const nick=safeText(profile.nickname||'');showModal(`<h1>暱稱</h1><div class="profile-input-row"><label for="nicknameInput">暱稱</label><input id="nicknameInput" class="profile-input" maxlength="5" value="${nick}" placeholder="取個響亮的名字"></div><p class="small-note">只收集暱稱與成績，用於排行榜與改善遊戲</p><div class="row"><button class="modalBtn" id="nickContinue">繼續</button><button class="modalBtn secondary" id="nickBack">返回首頁</button></div>`);$('#nickContinue').onclick=()=>{setNickname($('#nicknameInput').value);profile.nicknameSet=true;writeJSON(PROFILE_KEY,profile);chooseCharacterModal();};$('#nickBack').onclick=goHome;}
+function chooseCharacterModal(){showModal(`<h1>${safeText(profile.nickname)}大魔王</h1><p>今天想玩哪個角色？</p><div class="row"><button class="modalBtn" id="chooseMan">帥哥</button><button class="modalBtn" id="chooseWoman">美女</button></div><button class="modalBtn secondary" id="chooseBack">返回首頁</button>`);$('#chooseMan').onclick=()=>beginCharacter('man');$('#chooseWoman').onclick=()=>beginCharacter('woman');$('#chooseBack').onclick=goHome;}
+function openReport(){const st=playerStats();showScreen('game');showModal(`<h1>📝成績單</h1><p>👽暱稱：<strong>${safeText(profile.nickname)}</strong></p><div class="panel-list"><div class="panel-row">🎖️最高分數：${st.bestScore}</div><div class="panel-row">🥊最高連擊：${st.bestCombo}</div><div class="panel-row">⏱️最長時間：${formatGameTime(st.bestTime)}</div><div class="panel-row">💾累計場數：${st.games}場</div><div class="panel-row">💾累計遊玩：${formatGameTime(st.totalTime)}</div><div class="panel-row">💾成就收藏：${st.achievements.length}/25</div><div class="panel-row">💩稱號：${titleFor(st)}</div></div><div class="row"><button class="modalBtn" id="reportAch">看成就收藏</button><button class="modalBtn secondary" id="editNick">修改暱稱</button><button class="modalBtn secondary" id="reportHome">返回首頁</button></div>`);$('#reportAch').onclick=openAchievements;$('#editNick').onclick=showNicknameModalForEdit;$('#reportHome').onclick=goHome;}
+function showNicknameModalForEdit(){showModal(`<h1>修改暱稱</h1><div class="profile-input-row"><label for="nicknameInput">暱稱</label><input id="nicknameInput" class="profile-input" maxlength="5" value="${safeText(profile.nickname)}" placeholder="取個響亮的名字"></div><p class="small-note">修改暱稱不會改變你的玩家 ID 或個人成績。</p><div class="row"><button class="modalBtn" id="nickSave">儲存</button><button class="modalBtn secondary" id="nickCancel">取消</button></div>`);$('#nickSave').onclick=()=>{setNickname($('#nicknameInput').value);openReport();};$('#nickCancel').onclick=openReport;}
+function openAchievements(){const unlocked=playerStats().achievements;const html=achievementDefs.map(a=>unlocked.includes(a.name)?`<div class="panel-row">🏆${safeText(a.name)}</div>`:`<div class="panel-row">🔒❔❔❔❔❔</div>`).join('');showModal(`<h1>🏆成就收藏</h1><p>${unlocked.length}/25</p><div class="panel-list">${html}</div><button class="modalBtn secondary" id="achBack">返回成績單</button>`);$('#achBack').onclick=openReport;}
+function openLeaderboard(mode='score'){rankMode=mode;const rows=getRecords();const metric={score:x=>x.score||0,combo:x=>x.combo||0,time:x=>x.time||0}[mode];const sorted=[...rows].sort((a,b)=>metric(b)-metric(a)||(a.endedAt||0)-(b.endedAt||0));const bestByPlayer=new Map();for(const r of sorted){if(!bestByPlayer.has(r.playerId))bestByPlayer.set(r.playerId,r);}const list=[...bestByPlayer.values()].sort((a,b)=>metric(b)-metric(a)||(a.endedAt||0)-(b.endedAt||0));const mine=list.findIndex(x=>x.playerId===profile.id);const tabs=`<div class="tab-row"><button class="tab-btn ${mode==='score'?'active':''}" id="tabScore">🎖️分數</button><button class="tab-btn ${mode==='combo'?'active':''}" id="tabCombo">🥊連擊</button><button class="tab-btn ${mode==='time'?'active':''}" id="tabTime">⏱️時間</button></div>`;let body=list.length?list.slice(0,50).map((r,i)=>`<div class="panel-row"><span class="rank-number">${i===0?'🥇':i===1?'🥈':i===2?'🥉':i+1}</span> ${safeText(r.nickname)}　<strong>${mode==='time'?formatClock(r.time):metric(r)}</strong><small>${mode==='time'?'單場存活時間':mode==='combo'?'最高連擊':'最高分'}</small></div>`).join(''):`<div class="panel-row">還沒有人上榜快來搶頭香🤡</div>`;showScreen('game');showModal(`<h1>🏆排行榜</h1>${tabs}<div class="panel-list">${body}</div><p>👽你的名次：${mine<0?'尚未上榜':'第'+(mine+1)+'名'}</p><div class="row"><button class="modalBtn" id="rankRefresh">重新整理</button><button class="modalBtn secondary" id="rankHome">返回首頁</button></div>`);$('#tabScore').onclick=()=>openLeaderboard('score');$('#tabCombo').onclick=()=>openLeaderboard('combo');$('#tabTime').onclick=()=>openLeaderboard('time');$('#rankRefresh').onclick=()=>openLeaderboard(mode);$('#rankHome').onclick=goHome;}
+function openSurvey(rec){const already=getSurveys().some(x=>x.gameId===rec.gameId&&x.playerId===profile.id);if(already){showModal(`<h1>💌已回饋</h1><p>這場遊戲已經提交過問卷囉😻</p><button class="modalBtn secondary" id="surveyBack">返回</button>`);$('#surveyBack').onclick=()=>showGameOver(rec);return;}let fun='',difficulty='';showModal(`<h1>【📝玩後小問卷】</h1><p>給小麥一點鼓勵30秒搞定🐱</p><label class="field-label">1.好玩程度</label><div class="survey-select" id="funOptions">${['😫','😐','🙂','😆','🤩'].map(x=>`<button class="survey-option" data-v="${x}">${x}</button>`).join('')}</div><label class="field-label">2.難易度</label><div class="survey-select" id="diffOptions">${['😴太簡單','👌剛剛好','😵有點難','💀太難了'].map(x=>`<button class="survey-option" data-v="${x}">${x}</button>`).join('')}</div><label class="field-label" for="surveyText">3.想說的話（選填）</label><textarea id="surveyText" class="survey-text" placeholder="有什麼感想或idea或bug都可以跟我說😻"></textarea><p class="small-note">只收集暱稱與成績用於排行榜與改善遊戲</p><div class="row"><button class="modalBtn" id="surveySubmit">送出</button><button class="modalBtn secondary" id="surveySkip">先不要</button></div>`);const bind=(id,cb)=>{document.querySelectorAll('#'+id+' .survey-option').forEach(b=>b.onclick=()=>{document.querySelectorAll('#'+id+' .survey-option').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');cb(b.dataset.v);});};bind('funOptions',x=>fun=x);bind('diffOptions',x=>difficulty=x);$('#surveySubmit').onclick=()=>{if(!fun||!difficulty){showModal('<h1>還差一點點😼</h1><p>請選擇好玩程度與難易度</p><button class="modalBtn secondary" id="surveyRetry">返回問卷</button>');$('#surveyRetry').onclick=()=>openSurvey(rec);return;}const surveys=getSurveys();surveys.push({surveyId:'s_'+Date.now(),playerId:profile.id,nickname:profile.nickname,gameId:rec.gameId,fun,difficulty,comment:$('#surveyText').value.trim(),submittedAt:Date.now()});writeJSON(SURVEY_KEY,surveys);showModal('<h1>👾謝謝你的回饋</h1><button class="modalBtn secondary" id="surveyDone">返回</button>');$('#surveyDone').onclick=()=>showGameOver(rec);};$('#surveySkip').onclick=()=>showGameOver(rec);}
+function showGameOver(rec){const head=achHTML(rec.achievements||[]);const already=getSurveys().some(x=>x.gameId===rec.gameId&&x.playerId===profile.id);showModal(`${head}<p>你的分數：<strong>${rec.score}</strong><br>最高分數：<strong>${best}</strong><br>本局最高連擊：<strong>${rec.combo}</strong><br>本局遊玩時間：<strong>${formatGameTime(rec.time)}</strong></p><div class="row"><button class="modalBtn" id="retry">再玩一次</button><button class="modalBtn secondary" id="surveyButton">${already?'💌已回饋':'📝給點意見'}</button><button class="modalBtn secondary" id="endHome">返回首頁</button></div>`);$('#retry').onclick=()=>{hideModal();startGame();};$('#surveyButton').onclick=()=>already?openSurvey(rec):openSurvey(rec);$('#endHome').onclick=goHome;}
 
-/* ========== 雲端玩家資料（本機暫存＋Apps Script） ========== */
-const CLOUD_URL='https://script.google.com/macros/s/AKfycbzJejhVFF83BZNEPHMXfAEvY1ZElxeOxgui4HzuVuf8NZy1uiMiDVOTiSMZcO_KmQXISA/exec';
-const PLAYER_ID_KEY='airi-brie-player-id-v1', NICK_KEY='airi-brie-nickname-v1', PENDING_KEY='airi-brie-cloud-pending-v1';
-function getPlayerId(){let id='';try{id=localStorage.getItem(PLAYER_ID_KEY)||'';}catch(e){}if(!id){id='cat-'+(crypto.randomUUID?crypto.randomUUID():Date.now().toString(36)+'-'+Math.random().toString(36).slice(2));try{localStorage.setItem(PLAYER_ID_KEY,id);}catch(e){}}return id;}
-function getNickname(){try{return (localStorage.getItem(NICK_KEY)||'').trim()||'無名貓奴';}catch(e){return '無名貓奴';}}
-function setNickname(v){v=(v||'').trim().slice(0,5)||'無名貓奴';try{localStorage.setItem(NICK_KEY,v);}catch(e){}return v;}
-function pendingGames(){try{return JSON.parse(localStorage.getItem(PENDING_KEY)||'[]');}catch(e){return [];}}
-function savePending(list){try{localStorage.setItem(PENDING_KEY,JSON.stringify(list.slice(-30)));}catch(e){}}
-async function uploadGameRecord(record){
-  const list=pendingGames();if(!list.some(x=>x.gameId===record.gameId))list.push(record);savePending(list);
-  try{await fetch(CLOUD_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=UTF-8'},body:JSON.stringify(record)});}
-  catch(e){return false;}
-  // Apps Script no-cors 回應是 opaque，無法讀取伺服器結果；保留本機待補傳，避免誤判成功或丟資料。
-  return false;
-}
-function queueCurrentGame(){
-  const record={playerId:getPlayerId(),nickname:getNickname(),gameId:'game-'+Date.now()+'-'+Math.random().toString(36).slice(2,9),score:Number(score)||0,combo:Number(maxCombo)||0,survivalTime:Math.floor(elapsed)||0};
-  const list=pendingGames();if(!list.some(x=>x.gameId===record.gameId))list.push(record);savePending(list);
-  // 送出一份。因為 Apps Script 的 no-cors 無法確認是否寫入，待補傳資料不在這裡刪除。
-  try{fetch(CLOUD_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=UTF-8'},body:JSON.stringify(record)}).catch(()=>{});}catch(e){}
-}
-getPlayerId();
 
 /* ========== 圖片：載入時自動縮小，大幅降低手機記憶體與解碼負擔 ========== */
 const IMG_DIR='./images/';
@@ -326,19 +324,8 @@ function showScreen(which){home.classList.toggle('active',which==='home');gameSc
 function showModal(html){modal.innerHTML=html;overlay.hidden=false;}
 function hideModal(){overlay.hidden=true;}
 function goHome(){hideModal();showScreen('home');}
-function homeModal(){
-  showScreen('game');
-  showModal(`<h1>最高紀錄</h1><p>👽暱稱：${getNickname()}<br>🥇最高分數<br><strong style="font-size:42px">${best}</strong><br>🦾最高連擊<br><strong style="font-size:42px">${bestCombo}</strong><br>⏱️最長時間<br><strong style="font-size:42px">${formatGameTime(bestTime)}</strong></p><button class="modalBtn" id="modalHome">返回首頁</button>`);
-  $('#modalHome').onclick=goHome;
-}
-function chooseModal(){
-  showScreen('game');
-  showModal(`<h1>選擇遊戲角色</h1><label style="display:block;font-weight:900;margin:10px 0 6px">暱稱</label><input id="nicknameInput" maxlength="5" value="${getNickname()==='無名貓奴'?'':getNickname()}" placeholder="取個響亮的名字" autocomplete="nickname" style="width:100%;padding:12px;border:2px solid var(--ink);border-radius:14px;background:#fffaf0;font:inherit;font-weight:900;text-align:center"><p>今天想玩哪個角色？</p><div class="row"><button class="modalBtn" id="chooseMan">帥哥</button><button class="modalBtn" id="chooseWoman">美女</button></div><button class="modalBtn secondary" id="chooseBack">返回首頁</button>`);
-  const pickCharacter=kind=>{setNickname($('#nicknameInput').value);beginCharacter(kind);};
-  $('#chooseMan').onclick=()=>pickCharacter('man');
-  $('#chooseWoman').onclick=()=>pickCharacter('woman');
-  $('#chooseBack').onclick=goHome;
-}
+function homeModal(){openReport();}
+function chooseModal(){showNicknameModal();}
 async function beginCharacter(kind){
   resumeCtx();
   if(!(assetsReady&&audioDone)){showModal('<h1>修蛋幾勒…</h1><p>正在準備遊戲素材<br>（第一次要等比較久🤧）</p>');await Promise.all([readyPromise,Promise.race([audioPromise,sleep(4000)])]);audioDone=true;}
@@ -366,9 +353,9 @@ function cleanObjects(){objects.forEach(o=>releaseElement(o.el));objects=[];}
 
 /* ========== 遊戲流程 ========== */
 function startGame(){
-  $('#gameTitle').textContent='✦ '+getNickname()+' ✦';
+  currentGameId='g_'+(crypto.randomUUID?crypto.randomUUID():Date.now()+'_'+Math.random().toString(36).slice(2));
   cancelAnimationFrame(raf);cleanObjects();gameOverPending=false;startMusic();
-  score=0;elapsed=0;gameTimerEl.textContent='⏱00:00';spawnTimer=0;comboTimer=stormTimer=poopRainTimer=0;
+  score=0;elapsed=0;gameTimerEl.textContent='⏱00:00';$('#gameTitle').textContent='✦ '+profile.nickname+' ✦';spawnTimer=0;comboTimer=stormTimer=poopRainTimer=0;
   specialSpawnTimer=8+Math.random()*5;lastSpecialSrc='';poopDodged=0;specialCount=0;runAchievements=[];unlockedThisRun=new Set();
   combo=maxCombo=0;comboEl.hidden=true;magnetTimer=0;setAura(false);lives=0;invulnTimer=0;renderLives(false);giantTimer=15+Math.random()*10;shieldTimer=18+Math.random()*10;guardTimer=0;setGuard(false);calmOn=false;calmMul=1;dimmed=false;dimEnded=false;dimEl.style.transition='none';dimEl.classList.remove('on');void dimEl.offsetWidth;dimEl.style.transition='';scoreEl.textContent='0';running=true;paused=false;pauseBtn.textContent='Ⅱ';pauseBtn.hidden=false;toastEl.textContent='';noticeClear();
   updateMetrics();setPlayer(.5);
@@ -383,11 +370,9 @@ function achHTML(list){
 }
 function finishGame(){
   if(!running&&!gameOverPending)return;
-  gameOverPending=false;running=false;cancelAnimationFrame(raf);stopMusic();saveBest();queueCurrentGame();noticeClear();pauseBtn.hidden=true;comboEl.hidden=true;setAura(false);setGuard(false);livesEl.hidden=true;
-  const head=achHTML(runAchievements);
-  showModal(`${head}<p>你的分數：<strong>${score}</strong><br>最高分數：<strong>${best}</strong><br>本局最高連擊：<strong>${maxCombo}</strong><br>本局遊玩時間：<strong>${formatGameTime(elapsed)}</strong><br></p><div class="row"><button class="modalBtn" id="retry">再玩一次</button><button class="modalBtn secondary" id="endHome">返回首頁</button></div>`);
-  $('#retry').onclick=()=>{hideModal();startGame();};
-  $('#endHome').onclick=goHome;
+  gameOverPending=false;running=false;cancelAnimationFrame(raf);stopMusic();saveBest();noticeClear();pauseBtn.hidden=true;comboEl.hidden=true;setAura(false);setGuard(false);livesEl.hidden=true;
+  const rec=saveLocalRun();
+  showGameOver(rec);
 }
 function pauseGame(){
   if(!running||gameOverPending)return;
@@ -599,6 +584,8 @@ gameScreen.addEventListener('pointerdown',e=>{if(!running||paused)return;pointer
 gameScreen.addEventListener('pointermove',e=>{if(!running||paused)return;if(e.buttons||e.pointerType==='touch')pointer(e);});
 $('#homeStart').onclick=chooseModal;
 $('#homeBest').onclick=homeModal;
+$('#homeReport').onclick=openReport;
+$('#homeRank').onclick=()=>openLeaderboard('score');
 pauseBtn.onclick=pauseGame;
 $('#backHome').onclick=()=>{running=false;gameOverPending=false;cancelAnimationFrame(raf);stopMusic();saveBest();noticeClear();hideModal();pauseBtn.hidden=true;comboEl.hidden=true;setAura(false);setGuard(false);livesEl.hidden=true;showScreen('home');};
 musicBtn.onclick=()=>{musicEnabled=!musicEnabled;if(musicEnabled&&running&&!paused)startMusic();else stopMusic();updateAudioButtons();};
