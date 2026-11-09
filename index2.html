@@ -76,6 +76,23 @@ button{font:inherit;cursor:pointer;color:inherit}
 .fun-tile.selected{background:linear-gradient(#ffe27a,#f3a43b);transform:translateY(-3px) scale(1.08);box-shadow:0 5px 0 var(--ink)}
 .diff-row{display:grid;grid-template-columns:1fr 1fr;gap:6px}.diff-row .survey-option{padding:9px 6px}
 .survey-msg{min-height:1.4em;margin:4px 0 8px!important;font-size:14px;color:#b3261e}
+#devBadge{position:fixed;left:8px;bottom:calc(env(safe-area-inset-bottom) + 6px);z-index:50;font-size:12px;font-weight:900;background:#ffeb99;border:2px solid var(--ink);border-radius:999px;padding:3px 9px;pointer-events:none;opacity:.92}
+.modal p.newbest+p.newbest{margin-top:0}
+.modal.sel{display:flex;flex-direction:column;overflow:hidden;padding:18px 14px 14px}
+.modal.sel h1.sel-title{margin:0 0 2px;font-size:clamp(22px,6.4vw,30px)}
+.modal p.sel-sub{margin:2px 0 8px;font-size:14px}
+.sel-grid{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:4px 3px 8px}
+.ch-card{border:2.5px solid var(--ink);border-radius:16px;background:linear-gradient(#fff8e8,#ffe9b5);padding:6px 6px 7px;box-shadow:0 3px 0 var(--ink);display:flex;flex-direction:column;align-items:center;gap:3px;transition:transform .12s,box-shadow .12s,background .12s}
+.ch-card:active{transform:translateY(2px);box-shadow:0 1px 0 var(--ink)}
+.ch-pic{width:100%;aspect-ratio:1/.9;border-radius:11px;overflow:hidden;background:#f1dfb4}
+.ch-pic img{display:block;width:100%;height:100%;object-fit:cover;object-position:50% 0%;pointer-events:none}   /* 半身：只顯示上半部；想多露出一點，把 0% 調大（例如 15%） */
+.ch-card.locked{background:linear-gradient(#efe6d0,#e2d5b3)}
+.ch-card.locked .ch-pic img{filter:brightness(0);opacity:.78}   /* 鎖住：剪影 */
+.ch-card.selected{background:linear-gradient(#ffe27a,#f3a43b);transform:translateY(-2px);box-shadow:0 5px 0 var(--ink)}
+.ch-name{font-weight:1000;font-size:15px;line-height:1.2}
+.ch-sub{font-size:12px;font-weight:800;opacity:.75;min-height:1.2em}
+.modal.sel .modalBtn{min-width:0;padding:10px 14px;font-size:17px;margin:3px}
+.modal p.sel-info{min-height:2.7em;margin:6px 0;font-size:14px;font-weight:900;line-height:1.35}
 </style>
 </head>
 <body>
@@ -90,18 +107,53 @@ button{font:inherit;cursor:pointer;color:inherit}
     <div class="home-menu"><button id="homeStart" class="home-text-btn">🎮開始遊戲🎮</button><button id="homeReport" class="home-text-btn">📝我的成績單📝</button><button id="homeRank" class="home-text-btn">🏆排行榜🏆</button></div>
   </section>
   <section id="gameScreen" class="screen" aria-label="遊戲畫面">
-    <img id="gameBg" src="./images/bg1.png" alt="遊戲背景"><div id="dim"></div>
+    <img id="gameBg" src="./images/manbg.png" alt="遊戲背景"><div id="dim"></div>
     <div id="topbar"><div class="pill">分數 <span id="score">0</span></div><div id="gameTitle">✦ 無名貓奴 ✦</div><div class="pill">最高 <span id="best">0</span></div></div>
     <div id="gameTimer">⏱00:00</div>
     <button id="backHome">👾首頁</button><button id="pauseBtn" aria-label="暫停">Ⅱ</button>
     <div id="audioControls"><button id="musicBtn" class="audioBtn" aria-label="切換背景音樂">🎵音樂：開</button><button id="soundBtn" class="audioBtn" aria-label="切換遊戲音效">🔊音效：開</button></div>
-    <div id="aura" hidden></div><div id="guard" hidden></div><div id="items"></div><div id="notice"></div><div id="toast"></div><div id="combo" hidden></div><div id="lives" hidden></div><img id="player" src="./images/m1.png" alt="玩家角色">
+    <div id="aura" hidden></div><div id="guard" hidden></div><div id="items"></div><div id="notice"></div><div id="toast"></div><div id="combo" hidden></div><div id="lives" hidden></div><img id="player" src="./images/man.png" alt="玩家角色">
   </section>
   <div id="overlay" hidden><div class="modal" id="modalContent"></div></div>
 </div>
+<div id="devBadge" hidden>🛠️工程師模式</div>
 <script>
 (()=>{
 'use strict';
+/* ==================== 角色設定（要新增 / 修改角色，只改這一區）====================
+   每個角色一塊 { … },  欄位說明：
+     id      代號（英文，不能重複，已經上線的不要改）
+     name    顯示的名字
+     img     角色圖檔名（在 images 資料夾；沒寫副檔名會自動補 .png）
+     bg      背景圖檔名（同上）
+     unlock  解鎖條件：null = 一開始就有；或 { type:'…', value:數字 }
+               type 可填：
+               'games'     累計場數           value 例：5
+               'achs'      成就收藏數         value 例：10（填 'all' = 全部成就）
+               'combo'     最高連擊           value 例：100
+               'totalTime' 累計遊玩秒數       value 例：900（= 15 分鐘）
+               'score'     最高分數           value 例：4000
+               'time'      單局最長存活秒數   value 例：90
+               'ach'       指定成就           value 例：'神級貓奴'
+     hint    鎖住時顯示的提示文字
+     hidden  true = 沒解鎖前名字顯示 ❔❔❔
+   注意：每塊後面的逗號、引號 ' ' 都要成對，不要漏。
+   設定寫錯的角色會被略過（工程師模式下選角畫面會顯示哪個有問題）。 */
+const CHARACTERS=[
+  {id:'man',     name:'帥哥',     img:'man.png',   bg:'manbg.png',   unlock:null},
+  {id:'woman',   name:'美女',     img:'woman.png', bg:'womanbg.png', unlock:null},
+  {id:'busy',    name:'就很忙',   img:'m6.png',    bg:'bg6.png',     unlock:{type:'games',value:5},        hint:'累計玩5場解鎖'},
+  {id:'mount',   name:'山系妹子', img:'m7.png',    bg:'bg7.png',     unlock:{type:'achs',value:5},         hint:'收集5個成就解鎖'},
+  {id:'fish',    name:'周魚民',   img:'m5',        bg:'bg5',         unlock:{type:'combo',value:100},      hint:'連擊破百解鎖'},
+  {id:'by2',     name:'by2',      img:'m1',        bg:'bg1',         unlock:{type:'totalTime',value:900},  hint:'累計遊玩15分鐘解鎖'},
+  {id:'monkey',  name:'山道猴子', img:'m2',        bg:'bg2',         unlock:{type:'achs',value:10},        hint:'收集10個成就解鎖'},
+  {id:'snow',    name:'阿雪',     img:'m4',        bg:'bg4',         unlock:{type:'score',value:4000},     hint:'單局4000分解鎖'},
+  {id:'sleep',   name:'站著睡',   img:'m3',        bg:'bg3',         unlock:{type:'time',value:90},        hint:'單局存活90秒解鎖'},
+  {id:'intruder',name:'入侵者',   img:'m8',        bg:'bg8',         unlock:{type:'achs',value:'all'},     hint:'收集全部成就解鎖', hidden:true},
+];
+const DEFAULT_CHAR='man';             // 第一次玩自動選的角色（id）
+const DEV_PASSWORD='oohmaigod';       // 工程師密碼：網址後面加 ?dev=密碼 → 全部解鎖、不上傳成績；?dev=off 關閉
+/* ======================================================================================= */
 const $=s=>document.querySelector(s);
 const home=$('#home'), gameScreen=$('#gameScreen'), overlay=$('#overlay'), modal=$('#modalContent');
 const noticeEl=$('#notice'), comboEl=$('#combo'), dimEl=$('#dim'), auraEl=$('#aura'), guardEl=$('#guard'), livesEl=$('#lives'), bg=$('#gameBg'), player=$('#player'), itemsEl=$('#items'), toastEl=$('#toast');
@@ -128,6 +180,26 @@ if(!profile.stats){   // 累計統計：場數、總時間、成就收藏（舊�
   profile.stats={games:old.length,totalTime:old.reduce((a,x)=>a+(x.time||0),0),achs:[...new Set(old.flatMap(x=>x.achievements||[]))]};
 }
 writeJSON(PROFILE_KEY,profile);
+/* ----- 角色清單整理 + 工程師模式 ----- */
+const imgFile=n=>/\.[A-Za-z0-9]+$/.test(n)?n:n+'.png';
+const COND_TYPES=['games','achs','combo','totalTime','score','time','ach'];
+const configErrors=[],seenIds=new Set();
+const CHARS=CHARACTERS.filter((c,i)=>{
+  const ok=c&&c.id&&c.name&&c.img&&c.bg&&!seenIds.has(c.id)&&(!c.unlock||(COND_TYPES.includes(c.unlock.type)&&c.unlock.value!==undefined&&c.unlock.value!==''));
+  if(!ok)configErrors.push('第 '+(i+1)+' 個角色設定有誤'+(c&&c.name?'（'+c.name+'）':''));
+  else seenIds.add(c.id);
+  return ok;
+}).map(c=>({...c,img:imgFile(c.img),bg:imgFile(c.bg)}));
+let devMode=false;
+try{
+  const q=new URLSearchParams(location.search).get('dev');
+  if(q!==null){
+    if(q===DEV_PASSWORD){devMode=true;try{localStorage.setItem('maimine-dev','1');}catch(e){}}
+    else if(q==='off'){try{localStorage.removeItem('maimine-dev');}catch(e){}}
+    try{history.replaceState(null,'',location.pathname+location.hash);}catch(e){}
+  }
+  if(q!=='off'&&localStorage.getItem('maimine-dev')==='1')devMode=true;
+}catch(e){}
 let currentGameId='',lastRec=null,bestAtStart=0,rankMode='score',boardData=null,boardTok=0,surveyDoneMem=false;
 const setNickname=name=>{profile.nickname=clip(String(name||'').replace(/[<>&"'`\\]/g,'').trim(),5)||DEFAULT_NAME;writeJSON(PROFILE_KEY,profile);$('#gameTitle').textContent='✦ '+profile.nickname+' ✦';};
 const safeText=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -144,7 +216,7 @@ const apiGet=params=>BACKEND_URL?apiFetch(BACKEND_URL+'?'+new URLSearchParams(pa
 
 /* ----- 成績上傳：先放進待傳清單，成功才移除；失敗會在下次連線 / 回到遊戲時自動補傳 ----- */
 const upState=new Map();   // gameId -> 'pending' | 'ok' | 'fail'
-const UP_TEXT={pending:'🛸成績上傳中…',ok:'🚀成績已上傳',fail:'💨上傳失敗 下次連線會自動補傳'};
+const UP_TEXT={pending:'🛸成績上傳中…',ok:'🚀成績已上傳',fail:'💨上傳失敗 下次連線會自動補傳',dev:'🛠️工程師模式 不上傳成績'};
 const upText=g=>{const k=upState.get(g)||'';return k==='fail'&&lastApiErr?UP_TEXT.fail+'\n（'+lastApiErr+'）':(UP_TEXT[k]||'');};
 const getQueue=()=>{const q=readJSON(QUEUE_KEY,[]);return Array.isArray(q)?q:[];};
 const setQueue=q=>writeJSON(QUEUE_KEY,q.slice(-30));
@@ -173,8 +245,11 @@ function recordRun(force){
   const sc=Number(score)||0, tm=Math.floor(elapsed)||0;
   if(!force&&sc<=0&&tm<3)return null;
   const rec={gameId:currentGameId,score:sc,combo:Number(maxCombo)||0,time:tm,achievements:[...runAchievements],newBest:sc>0&&sc>bestAtStart};
+  if(devMode){lastRec=rec;upState.set(rec.gameId,'dev');return rec;}   // 工程師模式：不計入累計、不上傳
   const st=profile.stats;st.games++;st.totalTime+=tm;
   for(const a of rec.achievements)if(!st.achs.includes(a))st.achs.push(a);
+  const fresh=CHARS.filter(c=>realUnlocked(c)&&!(profile.seenUnlocked||[]).includes(c.id));
+  if(fresh.length){profile.seenUnlocked=[...(profile.seenUnlocked||[]),...fresh.map(c=>c.id)];rec.newChars=fresh.map(c=>c.name);}
   writeJSON(PROFILE_KEY,profile);
   lastRec=rec;
   enqueue({gameId:rec.gameId,score:rec.score,combo:rec.combo,time:rec.time});
@@ -197,7 +272,52 @@ function showNicknameModal(){
   $('#nickContinue').onclick=()=>{setNickname($('#nicknameInput').value);profile.nicknameSet=true;writeJSON(PROFILE_KEY,profile);chooseCharacterModal();};
   $('#nickBack').onclick=goHome;
 }
-function chooseCharacterModal(){showModal(`<h1>${safeText(profile.nickname)}大魔王</h1><p>今天想玩哪個角色？</p><div class="row"><button class="modalBtn" id="chooseMan">帥哥</button><button class="modalBtn" id="chooseWoman">美女</button></div><button class="modalBtn secondary" id="chooseBack">返回首頁</button>`);$('#chooseMan').onclick=()=>beginCharacter('man');$('#chooseWoman').onclick=()=>beginCharacter('woman');$('#chooseBack').onclick=goHome;}
+/* ----- 角色解鎖判斷 ----- */
+function charProgress(c){
+  const u=c.unlock;if(!u)return {ok:true};
+  const st=playerStats();
+  if(u.type==='ach'){const has=st.achievements.includes(u.value);return {ok:has,short:'',long:''};}
+  const t=u.value==='all'?achievementDefs.length:Number(u.value);
+  let cur=0,short='',long='';
+  switch(u.type){
+    case 'games':cur=st.games;short=cur+'/'+t;long='累計 '+cur+' / '+t+' 場';break;
+    case 'achs':cur=st.achievements.length;short=cur+'/'+t;long='已收集 '+cur+' / '+t+' 個';break;
+    case 'combo':cur=st.bestCombo;short=cur+'/'+t;long='最高連擊 '+cur+' / '+t;break;
+    case 'totalTime':cur=st.totalTime;short=Math.floor(cur/60)+'/'+Math.floor(t/60)+'分';long='累計 '+formatGameTime(cur)+' / '+formatGameTime(t);break;
+    case 'score':cur=st.bestScore;short=cur+'/'+t;long='最高分數 '+cur+' / '+t;break;
+    case 'time':cur=st.bestTime;short=cur+'/'+t+'秒';long='最長存活 '+formatGameTime(cur)+' / '+formatGameTime(t);break;
+  }
+  return {ok:cur>=t,short,long};
+}
+const realUnlocked=c=>charProgress(c).ok;
+const charUnlocked=c=>devMode||realUnlocked(c);
+
+/* ----- 選角畫面：兩欄卡片，圖片顯示半身；鎖住的是剪影 ----- */
+function chooseCharacterModal(){
+  let sel=profile.selectedChar;
+  if(!CHARS.some(c=>c.id===sel&&charUnlocked(c)))sel=(CHARS.find(c=>c.id===DEFAULT_CHAR&&charUnlocked(c))||CHARS.find(charUnlocked)||{}).id||'';
+  const card=c=>{
+    const ok=charUnlocked(c),p=charProgress(c),nm=(!ok&&c.hidden)?'❔❔❔':c.name;
+    return `<button class="ch-card${ok?'':' locked'}${c.id===sel?' selected':''}" data-id="${safeText(c.id)}"><div class="ch-pic"><img src="${IMG_DIR+safeText(c.img)}" alt="" loading="lazy" decoding="async" draggable="false"></div><div class="ch-name">${safeText(nm)}</div><div class="ch-sub">${ok?'':'🔒 '+safeText(p.short||'')}</div></button>`;
+  };
+  const warn=(devMode&&configErrors.length)?`<p class="small-note">⚠️${safeText(configErrors.join('、'))}</p>`:'';
+  showModal(`<h1 class="sel-title">${safeText(profile.nickname)}大魔王</h1><p class="sel-sub">今天想玩哪個角色？</p><div class="sel-grid" id="selGrid">${CHARS.map(card).join('')}</div><p class="sel-info" id="selInfo"></p>${warn}<div class="row"><button class="modalBtn" id="chooseGo">就決定是你了</button><button class="modalBtn secondary" id="chooseBack">返回首頁</button></div>`,'sel');
+  const info=t=>{const e=$('#selInfo');if(e)e.textContent=t;};
+  const byId=id=>CHARS.find(c=>c.id===id);
+  const showSel=()=>{const c=byId(sel);info(c?'✅ 已選：'+c.name:'');};
+  showSel();
+  const cur=document.querySelector('.ch-card.selected');if(cur&&cur.scrollIntoView)cur.scrollIntoView({block:'nearest'});
+  document.querySelectorAll('.ch-card').forEach(b=>b.onclick=()=>{
+    const c=byId(b.dataset.id);if(!c)return;
+    if(charUnlocked(c)){
+      sel=c.id;document.querySelectorAll('.ch-card').forEach(x=>x.classList.toggle('selected',x===b));showSel();
+    }else{
+      const p=charProgress(c);info('🔒 '+(c.hint||'尚未解鎖')+(p.long?'（'+p.long+'）':''));
+    }
+  });
+  $('#chooseGo').onclick=()=>{const c=byId(sel);if(!c)return;profile.selectedChar=c.id;writeJSON(PROFILE_KEY,profile);beginCharacter(c);};
+  $('#chooseBack').onclick=goHome;
+}
 
 /* ----- 成績單 / 成就收藏 ----- */
 function openReport(){
@@ -257,6 +377,7 @@ function openSurvey(rec){
   $('#surveySkip').onclick=()=>{closed=true;showGameOver(rec);};
   $('#surveySubmit').onclick=async()=>{
     if(sending)return;
+    if(devMode){msg('🛠️工程師模式 問卷不送出');return;}
     if(!fun||!diff){msg('還差一點點😼 請選好玩程度與難易度');return;}
     sending=true;const btn=$('#surveySubmit');btn.disabled=true;btn.textContent='送出中…';msg('');
     try{
@@ -274,7 +395,7 @@ function openSurvey(rec){
 /* ----- 遊戲結束畫面 ----- */
 function showGameOver(rec){
   const head=achHTML(rec.achievements||[]),done=surveyDone();
-  showModal(`${head}<p>你的分數：<strong>${rec.score}</strong><br>最高分數：<strong>${best}</strong><br>本局最高連擊：<strong>${rec.combo}</strong><br>本局遊玩時間：<strong>${formatGameTime(rec.time)}</strong></p>${rec.newBest?'<p class="newbest">🌟新的個人最高分！</p>':''}<p class="up" id="upStatus" data-gid="${rec.gameId}"></p><div class="row"><button class="modalBtn" id="retry">再玩一次</button><button class="modalBtn secondary" id="surveyButton"${done?' disabled':''}>${done?'💌已回饋':'📝給點意見'}</button><button class="modalBtn secondary" id="endHome">返回首頁</button></div>`);
+  showModal(`${head}<p>你的分數：<strong>${rec.score}</strong><br>最高分數：<strong>${best}</strong><br>本局最高連擊：<strong>${rec.combo}</strong><br>本局遊玩時間：<strong>${formatGameTime(rec.time)}</strong></p>${rec.newBest?'<p class="newbest">🌟新的個人最高分！</p>':''}${rec.newChars&&rec.newChars.length?`<p class="newbest">🔓解鎖新角色：${rec.newChars.map(safeText).join('、')}</p>`:''}<p class="up" id="upStatus" data-gid="${rec.gameId}"></p><div class="row"><button class="modalBtn" id="retry">再玩一次</button><button class="modalBtn secondary" id="surveyButton"${done?' disabled':''}>${done?'💌已回饋':'📝給點意見'}</button><button class="modalBtn secondary" id="endHome">返回首頁</button></div>`);
   refreshUpStatus();
   $('#retry').onclick=()=>{hideModal();startGame();};
   $('#surveyButton').onclick=()=>{if(!surveyDone())openSurvey(rec);};
@@ -287,7 +408,7 @@ const IMG_DIR='./images/';
 const ITEM_MAX=288;                         // 掉落物最長邊（顯示最大約 135px，288 足夠 2x/3x 螢幕）
 const PLAYER_MAX=480;                       // 角色最長邊
 const itemNames=['a1','a2','a3','a4','a5','b1','b2','b3','b4','b5','x1','x2','x3','x5','x6','x7','x8','shit1','shit2','shit3'].map(n=>n+'.png').concat('x4.png');
-const sizedNames=[...itemNames.map(n=>[n,ITEM_MAX]),['m1.png',PLAYER_MAX],['m2.png',PLAYER_MAX]];
+const sizedNames=[...itemNames.map(n=>[n,ITEM_MAX]),['man.png',PLAYER_MAX],['woman.png',PLAYER_MAX]];
 const urlCache=new Map(), keepAlive=[], glowFrac=new Map(), missing=new Set();   // missing：載入失敗（沒上傳）的圖，不會被抽成道具
 const glowSpecials=['x2.png','x3.png','x5.png','x6.png','x8.png'];   // 這幾種道具偶爾會變成放大版（x1、x4、x7 不會）
 const glowNames=['a1','a2','a3','a4','a5','b1','b2','b3','b4','b5'].map(n=>n+'.png').concat(glowSpecials);   // 需要預先畫光暈版的圖
@@ -332,7 +453,7 @@ const queue=sizedNames.slice();
 const worker=async()=>{while(queue.length){const [n,m]=queue.shift();await shrink(n,m);}};
 const readyPromise=Promise.all([worker(),worker(),worker()]).then(()=>{assetsReady=true;});
 // 背景圖只有一張在用，單純預先載入即可
-['bg1.png','bg2.png'].forEach(n=>{const i=new Image();i.decoding='async';i.src=IMG_DIR+n;});
+['manbg.png','womanbg.png'].forEach(n=>{const i=new Image();i.decoding='async';i.src=IMG_DIR+n;});
 
 /* ========== 音效 ========== */
 const soundFiles={click:IMG_DIR+'click.mp3',pop:IMG_DIR+'pop.mp3',jump:IMG_DIR+'jump2.mp3',poo:IMG_DIR+'poo.mp3',music:IMG_DIR+'music2.mp3'};
@@ -484,16 +605,22 @@ function setGuard(on){
 
 /* ========== 畫面 / 對話框 ========== */
 function showScreen(which){home.classList.toggle('active',which==='home');gameScreen.classList.toggle('active',which==='game');if(which!=='home')annCard.hidden=true;}
-function showModal(html){modal.innerHTML=html;overlay.hidden=false;}
+function showModal(html,cls){modal.className='modal'+(cls?' '+cls:'');modal.innerHTML=html;overlay.hidden=false;}
 function hideModal(){overlay.hidden=true;}
 function goHome(){boardTok++;hideModal();showScreen('home');}
 function homeModal(){openReport();}
 function chooseModal(){showNicknameModal();}
-async function beginCharacter(kind){
+async function beginCharacter(c){
   resumeCtx();
   if(!(assetsReady&&audioDone)){showModal('<h1>修蛋幾勒…</h1><p>正在準備遊戲素材<br>（第一次要等比較久🤧）</p>');await Promise.all([readyPromise,Promise.race([audioPromise,sleep(4000)])]);audioDone=true;}
-  bg.src=IMG_DIR+(kind==='man'?'bg1.png':'bg2.png');
-  player.src=img(kind==='man'?'m1.png':'m2.png');
+  if(!urlCache.has(c.img)&&!missing.has(c.img)){showModal('<h1>修蛋幾勒…</h1><p>正在準備角色🐱</p>');await shrink(c.img,PLAYER_MAX);}   // 只載入選到的角色
+  if(missing.has(c.img)){showModal('<h1>找不到角色圖😿</h1><p>請確認 images 資料夾裡有 '+safeText(c.img)+'</p><button class="modalBtn secondary" id="missBack">返回選角</button>');$('#missBack').onclick=chooseCharacterModal;return;}
+  const bgUrl=IMG_DIR+c.bg;
+  if(!(bg.getAttribute('src')===bgUrl&&bg.complete)){
+    await new Promise(res=>{const t=setTimeout(res,4000);bg.onload=bg.onerror=()=>{clearTimeout(t);res();};bg.src=bgUrl;});
+  }
+  player.src=img(c.img);
+  try{await Promise.race([player.decode(),sleep(3000)]);}catch(e){}
   hideModal();showScreen('game');startGame();
 }
 function setPlayer(x){
@@ -790,6 +917,8 @@ $('#annClose').onclick=annHide;
 (()=>{let seen='';try{seen=localStorage.getItem(ANN_KEY)||'';}catch(e){}
   if(seen!==ANN.ver)setTimeout(()=>{if(home.classList.contains('active')){annShow();try{localStorage.setItem(ANN_KEY,ANN.ver);}catch(e){}}},500);
 })();
+if(!profile.seenUnlocked){profile.seenUnlocked=CHARS.filter(realUnlocked).map(c=>c.id);writeJSON(PROFILE_KEY,profile);}   // 更新前已達成的不當成「新解鎖」
+$('#devBadge').hidden=!devMode;
 updateAudioButtons();setPlayer(.5);
 window.addEventListener('online',flushQueue);flushQueue();   // 開啟遊戲時，順便補傳上次沒傳成功的成績
 })();
