@@ -90,12 +90,12 @@ button{font:inherit;cursor:pointer;color:inherit}
     <div class="home-menu"><button id="homeStart" class="home-text-btn">🎮開始遊戲🎮</button><button id="homeReport" class="home-text-btn">📝我的成績單📝</button><button id="homeRank" class="home-text-btn">🏆排行榜🏆</button></div>
   </section>
   <section id="gameScreen" class="screen" aria-label="遊戲畫面">
-    <img id="gameBg" src="./images/manbg.png" alt="遊戲背景"><div id="dim"></div>
+    <img id="gameBg" src="./images/bg1.png" alt="遊戲背景"><div id="dim"></div>
     <div id="topbar"><div class="pill">分數 <span id="score">0</span></div><div id="gameTitle">✦ 無名貓奴 ✦</div><div class="pill">最高 <span id="best">0</span></div></div>
     <div id="gameTimer">⏱00:00</div>
     <button id="backHome">👾首頁</button><button id="pauseBtn" aria-label="暫停">Ⅱ</button>
     <div id="audioControls"><button id="musicBtn" class="audioBtn" aria-label="切換背景音樂">🎵音樂：開</button><button id="soundBtn" class="audioBtn" aria-label="切換遊戲音效">🔊音效：開</button></div>
-    <div id="aura" hidden></div><div id="guard" hidden></div><div id="items"></div><div id="notice"></div><div id="toast"></div><div id="combo" hidden></div><div id="lives" hidden></div><img id="player" src="./images/man.png" alt="玩家角色">
+    <div id="aura" hidden></div><div id="guard" hidden></div><div id="items"></div><div id="notice"></div><div id="toast"></div><div id="combo" hidden></div><div id="lives" hidden></div><img id="player" src="./images/m1.png" alt="玩家角色">
   </section>
   <div id="overlay" hidden><div class="modal" id="modalContent"></div></div>
 </div>
@@ -287,7 +287,7 @@ const IMG_DIR='./images/';
 const ITEM_MAX=288;                         // 掉落物最長邊（顯示最大約 135px，288 足夠 2x/3x 螢幕）
 const PLAYER_MAX=480;                       // 角色最長邊
 const itemNames=['a1','a2','a3','a4','a5','b1','b2','b3','b4','b5','x1','x2','x3','x5','x6','x7','x8','shit1','shit2','shit3'].map(n=>n+'.png').concat('x4.png');
-const sizedNames=[...itemNames.map(n=>[n,ITEM_MAX]),['man.png',PLAYER_MAX],['woman.png',PLAYER_MAX]];
+const sizedNames=[...itemNames.map(n=>[n,ITEM_MAX]),['m1.png',PLAYER_MAX],['m2.png',PLAYER_MAX]];
 const urlCache=new Map(), keepAlive=[], glowFrac=new Map(), missing=new Set();   // missing：載入失敗（沒上傳）的圖，不會被抽成道具
 const glowSpecials=['x2.png','x3.png','x5.png','x6.png','x8.png'];   // 這幾種道具偶爾會變成放大版（x1、x4、x7 不會）
 const glowNames=['a1','a2','a3','a4','a5','b1','b2','b3','b4','b5'].map(n=>n+'.png').concat(glowSpecials);   // 需要預先畫光暈版的圖
@@ -332,7 +332,7 @@ const queue=sizedNames.slice();
 const worker=async()=>{while(queue.length){const [n,m]=queue.shift();await shrink(n,m);}};
 const readyPromise=Promise.all([worker(),worker(),worker()]).then(()=>{assetsReady=true;});
 // 背景圖只有一張在用，單純預先載入即可
-['manbg.png','womanbg.png'].forEach(n=>{const i=new Image();i.decoding='async';i.src=IMG_DIR+n;});
+['bg1.png','bg2.png'].forEach(n=>{const i=new Image();i.decoding='async';i.src=IMG_DIR+n;});
 
 /* ========== 音效 ========== */
 const soundFiles={click:IMG_DIR+'click.mp3',pop:IMG_DIR+'pop.mp3',jump:IMG_DIR+'jump2.mp3',poo:IMG_DIR+'poo.mp3',music:IMG_DIR+'music2.mp3'};
@@ -492,8 +492,8 @@ function chooseModal(){showNicknameModal();}
 async function beginCharacter(kind){
   resumeCtx();
   if(!(assetsReady&&audioDone)){showModal('<h1>修蛋幾勒…</h1><p>正在準備遊戲素材<br>（第一次要等比較久🤧）</p>');await Promise.all([readyPromise,Promise.race([audioPromise,sleep(4000)])]);audioDone=true;}
-  bg.src=IMG_DIR+(kind==='man'?'manbg.png':'womanbg.png');
-  player.src=img(kind==='man'?'man.png':'woman.png');
+  bg.src=IMG_DIR+(kind==='man'?'bg1.png':'bg2.png');
+  player.src=img(kind==='man'?'m1.png':'m2.png');
   hideModal();showScreen('game');startGame();
 }
 function setPlayer(x){
